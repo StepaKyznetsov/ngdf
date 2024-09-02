@@ -10,7 +10,7 @@
     "serve:ssr:test": "node dist/test/server/server.mjs",
     "lint": "npx eslint projects/ngdf",
     "lint-staged": {
-      "**/*": ["prettier --write --ignore-unknown"]
+      "**/*": "prettier --write --ignore-unknown"
     },
     "prepare": "husky"
   },
