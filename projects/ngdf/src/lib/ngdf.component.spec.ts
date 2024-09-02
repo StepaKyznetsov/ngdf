@@ -8,9 +8,8 @@ describe('NgdfComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NgdfComponent]
-    })
-    .compileComponents();
+      imports: [NgdfComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(NgdfComponent);
     component = fixture.componentInstance;
