@@ -7,8 +7,4 @@ import { Component } from '@angular/core';
   template: ` <p>ngdf works!</p> `,
   styles: ``,
 })
-export class NgdfComponent {
-  constructor() {
-    const a = 2;
-  }
-}
+export class NgdfComponent {}
