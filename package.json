@@ -8,8 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:test": "node dist/test/server/server.mjs",
-    "lint": "npx eslint --debug projects/ngdf --fix",
-    "lint:fix": "npx eslint --debug projects/ngdf --fix",
+    "lint": "npx eslint --debug projects --fix",
+    "lint:fix": "npx eslint --debug projects --fix",
     "prepare": "husky",
     "prettier": "npx prettier . --write"
   },
