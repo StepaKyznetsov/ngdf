@@ -3,16 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve test",
-    "build": "ng build",
+    "start:test": "ng serve test",
+    "build:test": "ng build test",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:test": "node dist/test/server/server.mjs",
-    "lint": "npx eslint projects/ngdf",
-    "lint-staged": {
-      "**/*": "prettier --write --ignore-unknown"
-    },
-    "prepare": "husky"
+    "lint": "npx eslint --debug projects/ngdf --fix",
+    "lint:fix": "npx eslint --debug projects/ngdf --fix",
+    "prepare": "husky",
+    "prettier": "npx prettier . --write"
   },
   "private": true,
   "dependencies": {
@@ -48,7 +47,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "lint-staged": "^15.2.10",
     "ng-packagr": "^18.2.1",
     "prettier": "3.3.3",
     "typescript": "~5.4.2",
