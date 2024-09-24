@@ -1,12 +1,15 @@
-import { inject, Injectable } from '@angular/core';
-
-import { FormBuilder } from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { DynamicFormConfig } from './types/config';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FormBuilderAdapter extends FormBuilder {
-  private readonly formBuilder = inject(FormBuilder);
-
-  
+export class NgdfFormBuilder {
+  buildForm(config: DynamicFormConfig): FormGroup {
+    for (const [name, control] of Object.entries(config)) {
+      console.log(name, control);
+    }
+    return new FormGroup([]);
+  }
 }
