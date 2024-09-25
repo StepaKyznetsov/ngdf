@@ -17,10 +17,31 @@ export type DynamicControlType =
   | 'radio';
 
 /**
+ * Validators keys
+ */
+export type ControlValidatorKey = keyof Omit<
+  typeof Validators,
+  'prototype' | 'compose' | 'composeAsync'
+>;
+
+/**
+ * Argument types for Validators keys from {@link ControlValidatorKey}
+ */
+export type ControlValidatorValueByKey<T extends ControlValidatorKey> =
+  (typeof Validators)[T] extends (_: infer R) => unknown ? R : never;
+
+/**
+ * https://stackoverflow.com/questions/74216110/set-type-for-the-key-values-of-object-entries-in-typescript
+ */
+export type Entries<T> = {
+  [K in keyof T]: [key: K, value: T[K]];
+}[keyof T][];
+
+/**
  * Config validators
  */
-type DynamicControlValidators = {
-  [key in keyof typeof Validators]: boolean | string | number | RegExp;
+export type DynamicControlValidators = {
+  [key in ControlValidatorKey]: ControlValidatorValueByKey<key>;
 };
 
 type DynamicControlAsyncValidators =
@@ -33,7 +54,6 @@ type DynamicControlAsyncValidators =
  * Basic control of the library
  */
 export interface DynamicControlConfig<T = string> {
-  id?: string;
   type?: DynamicControlType;
   required?: boolean;
   hidden?: boolean;
@@ -52,24 +72,27 @@ export interface Option<T extends string | number = string> {
   value: T | null;
 }
 
+type CompositeControl = Omit<DynamicControlConfig, 'value' | 'type'>;
+
 /**
  * Сontrol with the ability to create copies of nested controls
  *
  * It is based on a FormArray
  */
-export interface DynamicArrayControlConfig
-  extends Omit<DynamicControlConfig, 'validators' | 'value'> {
+export interface DynamicArrayControlConfig extends CompositeControl {
   controls: DynamicControlConfig[];
 }
 
 /**
- * Default form config = dynamic form group
+ * Default form config
  *
  * It is based on a FormGroup
  */
-export interface DynamicFormConfig {
-  [key: string]:
-    | DynamicControlConfig
-    | DynamicFormConfig
-    | DynamicArrayControlConfig;
+export interface DynamicFormConfig extends CompositeControl {
+  controls: {
+    [key: string]:
+      | DynamicControlConfig
+      | DynamicArrayControlConfig
+      | DynamicFormConfig;
+  };
 }

@@ -6,7 +6,7 @@ import {
 import { DynamicControlType } from './types/config';
 
 /**
- * Array of registered dyanmic components
+ * Array of registered dynamic components
  */
 export const DYNAMIC_CONTROLS = new InjectionToken<
   ReadonlyMap<DynamicControlType, unknown>

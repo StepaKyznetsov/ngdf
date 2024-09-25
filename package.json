@@ -3,15 +3,17 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start:test": "ng serve test",
-    "build:test": "ng build test",
+    "start:demo": "ng serve demo",
+    "build:demo": "ng build demo",
+    "build:ngdf": "ng build ngdf",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:test": "node dist/test/server/server.mjs",
     "lint": "npx eslint --debug projects --fix",
     "lint:fix": "npx eslint --debug projects --fix",
     "prepare": "husky",
-    "prettier": "npx prettier . --write"
+    "prettier": "npx prettier . --write",
+    "serve:ssr:demo": "node dist/demo/server/server.mjs"
   },
   "private": true,
   "dependencies": {

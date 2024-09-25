@@ -14,15 +14,16 @@ import { NgdfFormBuilder } from './ngdf-form-builder';
 import { DynamicFormConfig } from './types/config';
 
 @Directive({
-  selector: 'form[ngdf]',
+  selector:
+    'form[ngdfForm]:not([formGroup]):not([ngForm]):not(ng-form):not([ngNoForm])',
   standalone: true,
-  exportAs: 'ngdf',
+  exportAs: 'ngdfForm',
 })
 export class NgdfFormDirective implements OnInit, OnChanges {
   private readonly ngdfFormBuilder = inject(NgdfFormBuilder);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly ngdf = input<DynamicFormConfig | null>(null);
+  readonly ngdfForm = input<DynamicFormConfig | null>(null);
   readonly valueChange = output<Record<string, unknown>>();
 
   protected formGroup: FormGroup | null = null;
@@ -43,7 +44,7 @@ export class NgdfFormDirective implements OnInit, OnChanges {
     }
   }
 
-  needToReCreateForm(changes: SimpleChanges): boolean {
-    return !!changes['ngdf'];
+  private needToReCreateForm(changes: SimpleChanges): boolean {
+    return Boolean(changes['ngdfForm']);
   }
 }
