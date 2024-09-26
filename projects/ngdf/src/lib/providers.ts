@@ -1,7 +1,7 @@
 import {
-    EnvironmentProviders,
-    InjectionToken,
-    makeEnvironmentProviders,
+  EnvironmentProviders,
+  InjectionToken,
+  makeEnvironmentProviders,
 } from '@angular/core';
 import { DynamicControlType } from './types/config';
 

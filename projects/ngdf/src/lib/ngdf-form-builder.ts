@@ -7,8 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  ControlValidatorArgumentTypeByKey,
   ControlValidatorKey,
-  ControlValidatorValueByKey,
   DynamicArrayControlConfig,
   DynamicControlConfig,
   DynamicControlValidators,
@@ -24,22 +24,32 @@ const VALIDATORS_WITH_ARGUMENT = [
 ];
 
 /**
- * Type narrowing helper
- * @param config
- * @returns
+ * Helper for narrowing (DynamicArrayControlConfig | DynamicFormConfig) type
  */
 const isDynamicArrayControlConfig = (
   config: DynamicArrayControlConfig | DynamicFormConfig,
 ): config is DynamicArrayControlConfig => Array.isArray(config.controls);
 
+// /**
+//  * 
+//  */
+// const isControlValidatorKey = (key: string): key is ControlValidatorKey => {
+//   return key in Validators;
+// };
+
+/**
+ * This is not a builder in the classical sense,
+ * at the moment it is more of an adapter that allows you to
+ * create a form group from the config.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class NgdfFormBuilder {
   /**
-   *
-   * @param config
-   * @returns
+   * Angular {@link FormGroup} creating from {@link DynamicFormConfig}
+   * @param config lib's FormGroup config
+   * @returns FormGroup
    */
   buildForm(config: DynamicFormConfig, validators?: ValidatorFn[]): FormGroup {
     const formGroup = new FormGroup({}, validators);
@@ -60,9 +70,9 @@ export class NgdfFormBuilder {
   }
 
   /**
-   *
-   * @param arrayConfig
-   * @returns
+   * Angular {@link FormArray} creating from {@link DynamicArrayControlConfig}
+   * @param arrayConfig lib's FormArray config
+   * @returns FormArray
    */
   buildFormArray(
     arrayConfig: DynamicArrayControlConfig,
@@ -75,9 +85,9 @@ export class NgdfFormBuilder {
   }
 
   /**
-   *
-   * @param controlConfig
-   * @returns
+   * Angular {@link FormControl} creating from {@link DynamicControlConfig}
+   * @param controlConfig lib's DynamicControlConfig config
+   * @returns FormControl
    */
   buildControl<T>(
     controlConfig: DynamicControlConfig<T>,
@@ -90,10 +100,11 @@ export class NgdfFormBuilder {
   }
 
   /**
+   * Method to get an array of Angular control validators from the {@link DynamicControlValidators}
+   * @param validators object with { key : value } validators structure
+   * @returns array of validators
    *
-   * @param validators
-   * @returns
-   * need to optimize O(3n)
+   * @note need to optimize O(3n)
    */
   resolveValidators(validators?: DynamicControlValidators): ValidatorFn[] {
     if (!validators) {
@@ -106,7 +117,7 @@ export class NgdfFormBuilder {
           entry,
         ): entry is [
           ControlValidatorKey,
-          ControlValidatorValueByKey<ControlValidatorKey>,
+          ControlValidatorArgumentTypeByKey<ControlValidatorKey>,
         ] => typeof entry[1] === 'boolean' && entry[1],
       )
       .map(([key, value]) => {

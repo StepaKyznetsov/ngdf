@@ -17,7 +17,7 @@ export type DynamicControlType =
   | 'radio';
 
 /**
- * Validators keys
+ * Validators keys from {@link Validators} class
  */
 export type ControlValidatorKey = keyof Omit<
   typeof Validators,
@@ -27,21 +27,14 @@ export type ControlValidatorKey = keyof Omit<
 /**
  * Argument types for Validators keys from {@link ControlValidatorKey}
  */
-export type ControlValidatorValueByKey<T extends ControlValidatorKey> =
+export type ControlValidatorArgumentTypeByKey<T extends ControlValidatorKey> =
   (typeof Validators)[T] extends (_: infer R) => unknown ? R : never;
-
-/**
- * https://stackoverflow.com/questions/74216110/set-type-for-the-key-values-of-object-entries-in-typescript
- */
-export type Entries<T> = {
-  [K in keyof T]: [key: K, value: T[K]];
-}[keyof T][];
 
 /**
  * Config validators
  */
 export type DynamicControlValidators = {
-  [key in ControlValidatorKey]: ControlValidatorValueByKey<key>;
+  [key in ControlValidatorKey]: ControlValidatorArgumentTypeByKey<key>;
 };
 
 type DynamicControlAsyncValidators =
@@ -51,48 +44,61 @@ type DynamicControlAsyncValidators =
   | AsyncValidatorFn[];
 
 /**
- * Basic control of the library
+ * Base type for all dynamic controls
  */
-export interface DynamicControlConfig<T = string> {
-  type?: DynamicControlType;
+export interface DynamicAbstractControlConfig {
   required?: boolean;
   hidden?: boolean;
   disabled?: boolean;
   validators?: DynamicControlValidators;
   asyncValidators?: DynamicControlAsyncValidators;
+}
+
+/**
+ * Control / form field
+ */
+export interface DynamicControlConfig<T = string>
+  extends DynamicAbstractControlConfig {
+  type?: DynamicControlType;
   options?: Option[];
   value: T;
 }
 
 /**
- * Select/autocomplete/radio/toggle controls options
+ * Select/autocomplete/radio/toggle options
  */
 export interface Option<T extends string | number = string> {
   label: string;
   value: T | null;
 }
 
-type CompositeControl = Omit<DynamicControlConfig, 'value' | 'type'>;
+/**
+ * Control with nested controls.
+ *
+ * 'controls' property should be array or another object
+ */
+export interface CompositeControl<T extends object>
+  extends DynamicAbstractControlConfig {
+  controls: T;
+}
 
 /**
  * Сontrol with the ability to create copies of nested controls
  *
- * It is based on a FormArray
+ * Based on {@link CompositeControl}
  */
-export interface DynamicArrayControlConfig extends CompositeControl {
-  controls: DynamicControlConfig[];
-}
+export type DynamicArrayControlConfig = CompositeControl<
+  DynamicControlConfig[]
+>;
 
 /**
  * Default form config
  *
- * It is based on a FormGroup
+ * Based on {@link CompositeControl}
  */
-export interface DynamicFormConfig extends CompositeControl {
-  controls: {
-    [key: string]:
-      | DynamicControlConfig
-      | DynamicArrayControlConfig
-      | DynamicFormConfig;
-  };
-}
+export type DynamicFormConfig = CompositeControl<{
+  [key: string]:
+    | DynamicControlConfig
+    | DynamicArrayControlConfig
+    | DynamicFormConfig;
+}>;
