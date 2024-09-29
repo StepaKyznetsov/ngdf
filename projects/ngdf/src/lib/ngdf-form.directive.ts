@@ -1,15 +1,14 @@
 import {
-  DestroyRef,
   Directive,
   inject,
   input,
   OnChanges,
-  OnInit,
+  OnDestroy,
   output,
   SimpleChanges,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { NgdfFormBuilder } from './ngdf-form-builder';
 import { DynamicFormConfig } from './types/config';
 
@@ -19,32 +18,45 @@ import { DynamicFormConfig } from './types/config';
   standalone: true,
   exportAs: 'ngdfForm',
 })
-export class NgdfFormDirective implements OnInit, OnChanges {
+export class NgdfFormDirective implements OnChanges, OnDestroy {
   private readonly ngdfFormBuilder = inject(NgdfFormBuilder);
-  private readonly destroyRef = inject(DestroyRef);
 
   readonly ngdfForm = input<DynamicFormConfig | null>(null);
   readonly valueChange = output<Record<string, unknown>>();
 
+  private destroyForm = new Subject<void>();
   protected formGroup: FormGroup | null = null;
-
-  ngOnInit(): void {
-    this.formGroup = this.ngdfFormBuilder.buildForm({});
-
-    this.formGroup.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value) => {
-        this.valueChange.emit(value);
-      });
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.needToReCreateForm(changes)) {
       return;
     }
+
+    if (this.ngdfForm()) {
+      this.destroy();
+      this.destroyForm = new Subject<void>();
+    }
+
+    this.formGroup = this.ngdfFormBuilder.buildGroup({ controls: {} });
+
+    this.formGroup.valueChanges
+      .pipe(
+        tap((value) => this.valueChange.emit(value)),
+        takeUntil(this.destroyForm),
+      )
+      .subscribe();
   }
 
   private needToReCreateForm(changes: SimpleChanges): boolean {
     return Boolean(changes['ngdfForm']);
+  }
+
+  private destroy(): void {
+    this.destroyForm.next();
+    this.destroyForm.complete();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy();
   }
 }

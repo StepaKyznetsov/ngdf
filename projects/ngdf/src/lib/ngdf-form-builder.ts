@@ -9,13 +9,14 @@ import {
 import {
   ControlValidatorArgumentTypeByKey,
   ControlValidatorKey,
+  ControlValidatorKeyWithFnArgument,
   DynamicArrayControlConfig,
   DynamicControlConfig,
   DynamicControlValidators,
   DynamicFormConfig,
 } from './types/config';
 
-const VALIDATORS_WITH_ARGUMENT = [
+const VALIDATORS_WITH_ARGUMENT: ControlValidatorKey[] = [
   'min',
   'max',
   'minLength',
@@ -30,17 +31,21 @@ const isDynamicArrayControlConfig = (
   config: DynamicArrayControlConfig | DynamicFormConfig,
 ): config is DynamicArrayControlConfig => Array.isArray(config.controls);
 
-// /**
-//  * 
-//  */
-// const isControlValidatorKey = (key: string): key is ControlValidatorKey => {
-//   return key in Validators;
-// };
+/**
+ * Helper for narrowing (DynamicArrayControlConfig | DynamicFormConfig) type
+ */
+const isValidatorKeyWithFnArgument = (
+  key: ControlValidatorKey,
+): key is ControlValidatorKeyWithFnArgument =>
+  VALIDATORS_WITH_ARGUMENT.includes(key);
+
+const truelyValue = (value: unknown): boolean =>
+  value !== undefined && value !== null && value !== false;
 
 /**
  * This is not a builder in the classical sense,
  * at the moment it is more of an adapter that allows you to
- * create a form group from the config.
+ * create a form group / array / control from the config.
  */
 @Injectable({
   providedIn: 'root',
@@ -49,9 +54,8 @@ export class NgdfFormBuilder {
   /**
    * Angular {@link FormGroup} creating from {@link DynamicFormConfig}
    * @param config lib's FormGroup config
-   * @returns FormGroup
    */
-  buildForm(config: DynamicFormConfig, validators?: ValidatorFn[]): FormGroup {
+  buildGroup(config: DynamicFormConfig, validators?: ValidatorFn[]): FormGroup {
     const formGroup = new FormGroup({}, validators);
     for (const [name, control] of Object.entries(config.controls)) {
       const validators = this.resolveValidators(control.validators);
@@ -59,7 +63,7 @@ export class NgdfFormBuilder {
         if (isDynamicArrayControlConfig(control)) {
           formGroup.addControl(name, this.buildFormArray(control, validators));
         } else {
-          formGroup.addControl(name, this.buildForm(control, validators));
+          formGroup.addControl(name, this.buildGroup(control, validators));
         }
       } else {
         formGroup.addControl(name, this.buildControl(control, validators));
@@ -72,7 +76,6 @@ export class NgdfFormBuilder {
   /**
    * Angular {@link FormArray} creating from {@link DynamicArrayControlConfig}
    * @param arrayConfig lib's FormArray config
-   * @returns FormArray
    */
   buildFormArray(
     arrayConfig: DynamicArrayControlConfig,
@@ -87,14 +90,14 @@ export class NgdfFormBuilder {
   /**
    * Angular {@link FormControl} creating from {@link DynamicControlConfig}
    * @param controlConfig lib's DynamicControlConfig config
-   * @returns FormControl
    */
-  buildControl<T>(
+  buildControl<T = string>(
     controlConfig: DynamicControlConfig<T>,
     validators?: ValidatorFn[],
-  ): FormControl<T | null> {
-    return new FormControl<T | null>(
-      controlConfig.value,
+  ): FormControl {
+    const { value, disabled } = controlConfig;
+    return new FormControl<T>(
+      { value, disabled: !!disabled },
       validators ?? this.resolveValidators(controlConfig.validators),
     );
   }
@@ -102,9 +105,6 @@ export class NgdfFormBuilder {
   /**
    * Method to get an array of Angular control validators from the {@link DynamicControlValidators}
    * @param validators object with { key : value } validators structure
-   * @returns array of validators
-   *
-   * @note need to optimize O(3n)
    */
   resolveValidators(validators?: DynamicControlValidators): ValidatorFn[] {
     if (!validators) {
@@ -117,16 +117,15 @@ export class NgdfFormBuilder {
           entry,
         ): entry is [
           ControlValidatorKey,
-          ControlValidatorArgumentTypeByKey<ControlValidatorKey>,
-        ] => typeof entry[1] === 'boolean' && entry[1],
+          ControlValidatorArgumentTypeByKey<ControlValidatorKeyWithFnArgument>,
+        ] => truelyValue(entry[1]),
       )
       .map(([key, value]) => {
-        if (VALIDATORS_WITH_ARGUMENT.includes(key)) {
+        if (isValidatorKeyWithFnArgument(key)) {
           return Validators[key](value);
         }
 
         return Validators[key];
-      })
-      .filter((validator): validator is ValidatorFn => !!validator);
+      });
   }
 }

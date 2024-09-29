@@ -3,14 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start:demo": "ng serve demo",
-    "build:demo": "ng build demo",
-    "build:ngdf": "ng build ngdf",
+    "start": "ng serve demo",
+    "build": "ng build ngdf",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:test": "node dist/test/server/server.mjs",
-    "lint": "npx eslint --debug projects --fix",
-    "lint:fix": "npx eslint --debug projects --fix",
+    "lint": "npx eslint --debug projects",
+    "lint:fix": "npx eslint --debug projects/ngdf --fix",
     "prepare": "husky",
     "prettier": "npx prettier . --write",
     "serve:ssr:demo": "node dist/demo/server/server.mjs"

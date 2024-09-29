@@ -17,24 +17,45 @@ export type DynamicControlType =
   | 'radio';
 
 /**
- * Validators keys from {@link Validators} class
+ * Keys of configurable synchronous validators
+ *
+ * @note clearer and easier-to-use way to get the name of validators
+ * instead of using inheritance and exclusion keys in the {@link Validators} class
  */
-export type ControlValidatorKey = keyof Omit<
-  typeof Validators,
-  'prototype' | 'compose' | 'composeAsync'
+export type ControlValidatorKey =
+  | 'min'
+  | 'max'
+  | 'minLength'
+  | 'maxLength'
+  | 'pattern'
+  | 'required'
+  | 'requiredTrue'
+  | 'email'
+  | 'nullValidator';
+
+/**
+ * Validator keys ...
+ */
+export type ControlValidatorKeyWithFnArgument = Exclude<
+  ControlValidatorKey,
+  'required' | 'requiredTrue' | 'nullValidator' | 'email'
 >;
 
 /**
  * Argument types for Validators keys from {@link ControlValidatorKey}
  */
 export type ControlValidatorArgumentTypeByKey<T extends ControlValidatorKey> =
-  (typeof Validators)[T] extends (_: infer R) => unknown ? R : never;
+  (typeof Validators)[T] extends (_: infer R) => unknown
+    ? T extends ControlValidatorKeyWithFnArgument
+      ? R
+      : boolean
+    : never;
 
 /**
  * Config validators
  */
 export type DynamicControlValidators = {
-  [key in ControlValidatorKey]: ControlValidatorArgumentTypeByKey<key>;
+  [key in ControlValidatorKey]?: ControlValidatorArgumentTypeByKey<key>;
 };
 
 type DynamicControlAsyncValidators =
