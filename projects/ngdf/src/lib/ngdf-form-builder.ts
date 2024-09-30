@@ -39,7 +39,7 @@ const isValidatorKeyWithFnArgument = (
 ): key is ControlValidatorKeyWithFnArgument =>
   VALIDATORS_WITH_ARGUMENT.includes(key);
 
-const truelyValue = (value: unknown): boolean =>
+const valueExistAndNotFalse = (value: unknown): boolean =>
   value !== undefined && value !== null && value !== false;
 
 /**
@@ -91,7 +91,7 @@ export class NgdfFormBuilder {
    * Angular {@link FormControl} creating from {@link DynamicControlConfig}
    * @param controlConfig lib's DynamicControlConfig config
    */
-  buildControl<T = string>(
+  buildControl<T>(
     controlConfig: DynamicControlConfig<T>,
     validators?: ValidatorFn[],
   ): FormControl {
@@ -118,7 +118,7 @@ export class NgdfFormBuilder {
         ): entry is [
           ControlValidatorKey,
           ControlValidatorArgumentTypeByKey<ControlValidatorKeyWithFnArgument>,
-        ] => truelyValue(entry[1]),
+        ] => valueExistAndNotFalse(entry[1]),
       )
       .map(([key, value]) => {
         if (isValidatorKeyWithFnArgument(key)) {

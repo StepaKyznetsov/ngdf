@@ -1,62 +1,52 @@
 import {
   Directive,
+  forwardRef,
   inject,
-  input,
-  OnChanges,
-  OnDestroy,
-  output,
-  SimpleChanges,
+  Input,
+  Provider,
+  Type,
+  ViewContainerRef,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import { catchError, from, Observable, of } from 'rxjs';
 import { NgdfFormBuilder } from './ngdf-form-builder';
-import { DynamicFormConfig } from './types/config';
+import { DYNAMIC_CONTROLS } from './providers';
+import { DynamicControlType, DynamicFormConfig, NgdfControl } from './types';
+
+const ngdfFormDirectiveProvider: Provider = {
+  provide: ControlContainer,
+  useExisting: forwardRef(() => FormGroupDirective),
+};
 
 @Directive({
   selector:
     'form[ngdfForm]:not([formGroup]):not([ngForm]):not(ng-form):not([ngNoForm])',
   standalone: true,
+  providers: [
+    { provide: FormGroupDirective, useExisting: NgdfFormDirective },
+    ngdfFormDirectiveProvider,
+  ],
   exportAs: 'ngdfForm',
 })
-export class NgdfFormDirective implements OnChanges, OnDestroy {
+export class NgdfFormDirective extends FormGroupDirective {
   private readonly ngdfFormBuilder = inject(NgdfFormBuilder);
+  private readonly vcr = inject(ViewContainerRef);
+  private readonly dynamicControls = inject(DYNAMIC_CONTROLS);
 
-  readonly ngdfForm = input<DynamicFormConfig | null>(null);
-  readonly valueChange = output<Record<string, unknown>>();
-
-  private destroyForm = new Subject<void>();
-  protected formGroup: FormGroup | null = null;
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.needToReCreateForm(changes)) {
-      return;
-    }
-
-    if (this.ngdfForm()) {
-      this.destroy();
-      this.destroyForm = new Subject<void>();
-    }
-
-    this.formGroup = this.ngdfFormBuilder.buildGroup({ controls: {} });
-
-    this.formGroup.valueChanges
-      .pipe(
-        tap((value) => this.valueChange.emit(value)),
-        takeUntil(this.destroyForm),
-      )
-      .subscribe();
+  @Input()
+  set ngdfForm(config: DynamicFormConfig) {
+    this.form = this.ngdfFormBuilder.buildGroup(config);
   }
 
-  private needToReCreateForm(changes: SimpleChanges): boolean {
-    return Boolean(changes['ngdfForm']);
-  }
+  // createForm(config: DynamicFormConfig): void {}
 
-  private destroy(): void {
-    this.destroyForm.next();
-    this.destroyForm.complete();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy();
+  fetchControl(
+    type: DynamicControlType,
+  ): Observable<Type<NgdfControl> | string> {
+    return from(this.dynamicControls.get(type)!()).pipe(
+      catchError(() =>
+        of(`Control ${type} isn't registered in DYNAMIC_CONTROLS token`),
+      ),
+    );
   }
 }
