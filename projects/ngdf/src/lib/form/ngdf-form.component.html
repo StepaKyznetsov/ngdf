@@ -1,0 +1,11 @@
+<form [ngdfForm]="config()">
+  @for (control of config().controls | keyvalue; track $index) {
+    @let name = control.key;
+    @let config = control.value;
+
+    <ng-template
+      [ngComponentOutlet]="ngdfControlResolver.resolve(config.type) | async"
+      [ngComponentOutletInjector]="name | ngdfControlInjector: config"
+    />
+  }
+</form>

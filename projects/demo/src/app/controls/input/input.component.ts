@@ -1,26 +1,14 @@
-import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { NgdfBaseControl, NgdfControl } from 'ngdf';
+import { Component, inject } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NGDF_CONTROL, NgdfBaseControl } from 'ngdf';
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
 })
-export class InputComponent extends NgdfBaseControl implements NgdfControl {
-  control?: FormControl<unknown> | undefined;
-  setProps(): void {
-    throw new Error('Method not implemented.');
-  }
-  setValue(): void {
-    throw new Error('Method not implemented.');
-  }
-  resetValue?(): void {
-    throw new Error('Method not implemented.');
-  }
-  addValidators?(): void {
-    throw new Error('Method not implemented.');
-  }
+export class InputComponent extends NgdfBaseControl {
+  readonly ngdfControl = inject(NGDF_CONTROL);
 }

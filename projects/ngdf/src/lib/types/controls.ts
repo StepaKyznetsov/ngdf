@@ -1,13 +1,12 @@
 import { Type } from '@angular/core';
-import { AbstractControl, FormControl, Validator } from '@angular/forms';
-import { DynamicControlConfig } from './config';
+import { NgdfBaseControl } from '../ngdf-base-control';
+import { DynamicAbstractControlConfig, DynamicControlConfig } from './config';
 
-export interface NgdfControl<T extends AbstractControl = FormControl> {
-  control?: T;
-  setProps(config: DynamicControlConfig): void;
-  setValue(value: unknown): void;
-  resetValue?(): void;
-  addValidators?(...validators: Validator[]): void;
+export interface NgdfControl<
+  T extends DynamicAbstractControlConfig = DynamicControlConfig,
+> {
+  controlName: string;
+  controlConfig: T;
 }
 
-export type LazyNgdfControl = () => Promise<Type<NgdfControl>>;
+export type LazyNgdfControl = () => Promise<Type<NgdfBaseControl>>;

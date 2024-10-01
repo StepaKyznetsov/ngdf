@@ -73,6 +73,7 @@ export interface DynamicAbstractControlConfig {
   disabled?: boolean;
   validators?: DynamicControlValidators;
   asyncValidators?: DynamicControlAsyncValidators;
+  type: DynamicControlType;
 }
 
 /**
@@ -80,7 +81,6 @@ export interface DynamicAbstractControlConfig {
  */
 export interface DynamicControlConfig<T = string>
   extends DynamicAbstractControlConfig {
-  type?: DynamicControlType;
   options?: Option[];
   value: T;
 }

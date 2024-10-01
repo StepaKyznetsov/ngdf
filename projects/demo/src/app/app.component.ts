@@ -1,29 +1,23 @@
-import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DYNAMIC_CONTROLS, DynamicFormConfig, NgdfFormDirective } from 'ngdf';
+import { DynamicFormConfig, NgdfFormComponent, NgdfFormDirective } from 'ngdf';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ReactiveFormsModule, NgdfFormDirective],
+  imports: [ReactiveFormsModule, NgdfFormDirective, NgdfFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  private readonly ngdfControls = inject(DYNAMIC_CONTROLS);
-
-  constructor() {
-    this.ngdfControls.get('text')
-  }
-
-  private readonly ngdf = viewChild(NgdfFormDirective);
-
   readonly config: DynamicFormConfig = {
     validators: {},
+    type: 'group',
     controls: {
       email: {
         value: '2',
+        type: 'text',
         validators: {
           required: true,
         },
