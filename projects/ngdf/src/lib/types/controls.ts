@@ -9,4 +9,4 @@ export interface NgdfControl<
   controlConfig: T;
 }
 
-export type LazyNgdfControl = () => Promise<Type<NgdfBaseControl>>;
+export type NgdfControlLoaderFn = () => Promise<Type<NgdfBaseControl>>;

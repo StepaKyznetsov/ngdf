@@ -22,6 +22,13 @@ export class AppComponent {
           required: true,
         },
       },
+      phone: {
+        value: '896444434',
+        type: 'text',
+        validators: {
+          required: true,
+        },
+      },
     },
   };
 }

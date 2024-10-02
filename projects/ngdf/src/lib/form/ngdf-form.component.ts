@@ -25,6 +25,5 @@ import { DynamicFormConfig } from '../types';
 })
 export class NgdfFormComponent {
   protected readonly ngdfControlResolver = inject(NgdfControlResolver);
-
   readonly config = input.required<DynamicFormConfig>();
 }
