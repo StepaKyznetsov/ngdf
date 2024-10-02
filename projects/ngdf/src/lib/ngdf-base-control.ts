@@ -1,7 +1,11 @@
 import { Directive, inject } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
+import { ControlContainer, FormGroup } from '@angular/forms';
 
-@Directive()
+@Directive({
+  host: {
+    'class': 'ngdf-control'
+  },
+})
 export class NgdfBaseControl {
-  protected readonly formGroup = inject(ControlContainer).control;
+  protected readonly formGroup = inject(ControlContainer).control as FormGroup;
 }
