@@ -9,14 +9,11 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(),
-    provideNgdfDynamicControls([
-      [
-        'text',
-        () =>
-          import('./controls/input/input.component').then(
-            (c) => c.InputComponent,
-          ),
-      ],
-    ]),
+    provideNgdfDynamicControls({
+      text: () =>
+        import('./controls/input/input.component').then(
+          (c) => c.InputComponent,
+        ),
+    }),
   ],
 };

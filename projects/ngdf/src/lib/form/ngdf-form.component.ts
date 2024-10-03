@@ -10,6 +10,9 @@ import { NgdfFormDirective } from '../ngdf-form.directive';
 import { NgdfControlInjectorPipe } from '../pipes/ngdf-control-injector.pipe';
 import { DynamicFormConfig } from '../types';
 
+/**
+ * 
+ */
 @Component({
   selector: 'ngdf-form',
   standalone: true,

@@ -25,11 +25,13 @@ export const NGDF_DYNAMIC_CONTROLS = new InjectionToken<
  * @param controls array of tuples: [control type, component]
  * @returns
  */
-export const provideNgdfDynamicControls = (
-  controls: [DynamicControlType, NgdfControlLoaderFn][],
-): EnvironmentProviders => {
+export const provideNgdfDynamicControls = (controls: {
+  [key in DynamicControlType]?: NgdfControlLoaderFn;
+}): EnvironmentProviders => {
   const controlMap = new Map<DynamicControlType, NgdfControlLoaderFn>();
-  controls.forEach((c) => controlMap.set(c[0], c[1]));
+  Object.entries(controls).forEach(([type, control]) =>
+    controlMap.set(type as DynamicControlType, control),
+  );
 
   return makeEnvironmentProviders([
     {

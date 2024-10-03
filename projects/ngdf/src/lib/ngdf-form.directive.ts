@@ -3,6 +3,9 @@ import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { NgdfFormBuilder } from './ngdf-form-builder';
 import { DynamicFormConfig } from './types';
 
+/**
+ * 
+ */
 @Directive({
   selector:
     'form[ngdfForm]:not([formGroup]):not([ngForm]):not(ng-form):not([ngNoForm])',
@@ -15,7 +18,9 @@ import { DynamicFormConfig } from './types';
 })
 export class NgdfFormDirective extends FormGroupDirective {
   private readonly ngdfFormBuilder = inject(NgdfFormBuilder);
-
+  /**
+   * 
+   */
   @Input()
   set ngdfForm(formConfig: DynamicFormConfig) {
     this.form = this.ngdfFormBuilder.buildGroup(formConfig);
