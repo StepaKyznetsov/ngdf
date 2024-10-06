@@ -3,13 +3,16 @@ import {
   InjectionToken,
   makeEnvironmentProviders,
 } from '@angular/core';
-import { NgdfControl, NgdfControlLoaderFn } from './types';
+import { NgdfBaseControl } from './ngdf-base-control';
+import { NgdfControlLoaderFn } from './types';
 import { DynamicControlType } from './types/config';
 
 /**
  * Name and config of ngdf control component
+ * 
+ * @deprecated
  */
-export const NGDF_CONTROL = new InjectionToken<NgdfControl>(
+export const NGDF_CONTROL = new InjectionToken<NgdfBaseControl>(
   'ngdf control data',
 );
 

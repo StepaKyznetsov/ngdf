@@ -5,7 +5,7 @@ import { NGDF_DYNAMIC_CONTROLS } from './providers';
 import { DynamicControlType } from './types';
 
 /**
- * 
+ *
  */
 @Injectable({
   providedIn: 'root',
@@ -14,20 +14,20 @@ export class NgdfControlResolver {
   private readonly dynamicControls = inject(NGDF_DYNAMIC_CONTROLS);
 
   /**
-   * 
+   *
    */
   private readonly controls = new Map<string, Type<NgdfBaseControl>>();
 
   /**
-   * 
-   * @param type 
-   * @returns 
+   *
+   * @param type
+   * @returns
    */
   resolve(type: DynamicControlType): Observable<Type<NgdfBaseControl>> {
     if (!this.controls.has(type)) {
       if (!this.dynamicControls.get(type)) {
         throw new Error(
-          `Control type "${type}" isn't registered in DYNAMIC_CONTROLS token 
+          `Control type "${type}" isn't registered in NGDF_DYNAMIC_CONTROLS token 
             (check provideDynamicControls in your app config)
           `,
         );

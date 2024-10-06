@@ -1,10 +1,10 @@
 import { Directive, inject, Input } from '@angular/core';
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
-import { NgdfFormBuilder } from './ngdf-form-builder';
-import { DynamicFormConfig } from './types';
+import { NgdfFormBuilder } from '../ngdf-form-builder';
+import { DynamicFormConfig } from '../types';
 
 /**
- * 
+ *
  */
 @Directive({
   selector:
@@ -19,7 +19,7 @@ import { DynamicFormConfig } from './types';
 export class NgdfFormDirective extends FormGroupDirective {
   private readonly ngdfFormBuilder = inject(NgdfFormBuilder);
   /**
-   * 
+   *
    */
   @Input()
   set ngdfForm(formConfig: DynamicFormConfig) {

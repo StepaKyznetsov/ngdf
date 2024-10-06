@@ -1,3 +1,6 @@
-@let config = ngdfControl.controlConfig;
-@let name = ngdfControl.controlName;
-<input [formControlName]="name" [value]="config.value" />
+@if (control()) {
+  @let name = control()!.key;
+  @let config = control()!.value;
+
+  <input [formControlName]="name" [value]="config.value" />
+}

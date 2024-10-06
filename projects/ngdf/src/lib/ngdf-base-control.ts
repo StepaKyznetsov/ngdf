@@ -1,8 +1,17 @@
-import { Directive, inject } from '@angular/core';
-import { ControlContainer, FormGroup } from '@angular/forms';
+import { KeyValue } from '@angular/common';
+import { Directive, input } from '@angular/core';
+import { DynamicControlConfig } from './types';
 
 /**
- * 
+ * Base class for all dynamic controls / groups / arrays.
+ *
+ * Custom control should extend the NgdfBaseControl class.
+ * ```ts
+ * import { NgdfBaseControl } from 'ngdf'
+ *
+ * @Component({...})
+ * export class CustomInputComponent extends NgdfBaseControl {...}
+ * ```
  */
 @Directive({
   host: {
@@ -10,5 +19,6 @@ import { ControlContainer, FormGroup } from '@angular/forms';
   },
 })
 export class NgdfBaseControl {
-  protected readonly formGroup = inject(ControlContainer).control as FormGroup;
+  readonly control =
+    input.required<KeyValue<string, DynamicControlConfig<string>>>();
 }

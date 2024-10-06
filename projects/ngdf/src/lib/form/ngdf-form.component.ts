@@ -1,17 +1,22 @@
-import { AsyncPipe, KeyValuePipe, NgComponentOutlet } from '@angular/common';
+import {
+  AsyncPipe,
+  KeyValuePipe,
+  // NgComponentOutlet,
+  NgTemplateOutlet,
+} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   input,
 } from '@angular/core';
+import { NgComponentOutlet } from '../directives/ng_component_outlet';
+import { NgdfFormDirective } from '../directives/ngdf-form.directive';
 import { NgdfControlResolver } from '../ngdf-control-resolver';
-import { NgdfFormDirective } from '../ngdf-form.directive';
-import { NgdfControlInjectorPipe } from '../pipes/ngdf-control-injector.pipe';
 import { DynamicFormConfig } from '../types';
 
 /**
- * 
+ * Key component of the "ngdf" library
  */
 @Component({
   selector: 'ngdf-form',
@@ -19,8 +24,8 @@ import { DynamicFormConfig } from '../types';
   templateUrl: './ngdf-form.component.html',
   imports: [
     NgdfFormDirective,
-    NgdfControlInjectorPipe,
     NgComponentOutlet,
+    NgTemplateOutlet,
     AsyncPipe,
     KeyValuePipe,
   ],
@@ -29,4 +34,10 @@ import { DynamicFormConfig } from '../types';
 export class NgdfFormComponent {
   protected readonly ngdfControlResolver = inject(NgdfControlResolver);
   readonly config = input.required<DynamicFormConfig>();
+
+  readonly outputs: { [key: string]: (arg?: unknown) => unknown } = {
+    value: (value: unknown) => {
+      console.log(value);
+    },
+  };
 }

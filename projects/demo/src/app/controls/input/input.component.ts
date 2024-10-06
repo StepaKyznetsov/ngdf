@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, output, viewChild } from '@angular/core';
 import {
   ControlContainer,
+  FormControlName,
   FormGroupDirective,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { NGDF_CONTROL, NgdfBaseControl } from 'ngdf';
+import { NgdfBaseControl } from 'ngdf';
 
 @Component({
   selector: 'app-input',
@@ -16,6 +17,14 @@ import { NGDF_CONTROL, NgdfBaseControl } from 'ngdf';
     { provide: ControlContainer, useExisting: FormGroupDirective },
   ],
 })
-export class InputComponent extends NgdfBaseControl {
-  readonly ngdfControl = inject(NGDF_CONTROL);
+export class InputComponent extends NgdfBaseControl implements AfterViewInit {
+  readonly controlRef = viewChild(FormControlName);
+
+  readonly value = output<string>();
+
+  ngAfterViewInit(): void {
+    this.controlRef()?.valueChanges?.subscribe((value) => {
+      this.value.emit(value);
+    });
+  }
 }

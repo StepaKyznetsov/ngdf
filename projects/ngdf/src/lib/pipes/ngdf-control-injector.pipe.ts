@@ -8,6 +8,7 @@ import {
 
 /**
  * Setting personal NGDF_CONTROL provider with name and config for every dynamic control
+ * @deprecated
  */
 @Pipe({
   name: 'ngdfControlInjector',
