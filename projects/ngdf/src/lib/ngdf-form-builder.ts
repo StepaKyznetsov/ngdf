@@ -15,29 +15,7 @@ import {
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
 } from './model/config';
-
-const VALIDATORS_WITH_ARGUMENT: ControlValidatorKey[] = [
-  'min',
-  'max',
-  'minLength',
-  'maxLength',
-  'pattern',
-];
-
-/**
- * Helper for narrowing (DynamicArrayControlConfig | DynamicFormConfig) type
- */
-const isDynamicArrayControlConfig = (
-  config: NgdfFormArrayConfig | NgdfFormGroupConfig,
-): config is NgdfFormArrayConfig => Array.isArray(config.controls);
-
-/**
- * Helper for narrowing (DynamicArrayControlConfig | DynamicFormConfig) type
- */
-const isValidatorKeyWithFnArgument = (
-  key: ControlValidatorKey,
-): key is ControlValidatorKeyWithFnArgument =>
-  VALIDATORS_WITH_ARGUMENT.includes(key);
+import { isFormArrayConfig, isValidatorKeyWithFnArgument } from './utils';
 
 const valueExistAndNotFalse = (value: unknown): boolean =>
   value !== undefined && value !== null && value !== false;
@@ -63,7 +41,7 @@ export class NgdfFormBuilder {
     for (const [name, control] of Object.entries(config.controls)) {
       const validators = this.resolveValidators(control.validators);
       if ('controls' in control) {
-        if (isDynamicArrayControlConfig(control)) {
+        if (isFormArrayConfig(control)) {
           formGroup.addControl(name, this.buildFormArray(control, validators));
         } else {
           formGroup.addControl(name, this.buildGroup(control, validators));

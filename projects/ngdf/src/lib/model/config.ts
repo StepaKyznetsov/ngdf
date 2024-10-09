@@ -66,7 +66,7 @@ type ControlAsyncValidators =
   | AsyncValidatorFn[];
 
 /**
- * Base type for all dynamic controls
+ * Base type for all dynamic controls / arrays / groups
  */
 export interface NgdfAbstractControlConfig {
   required?: boolean;
