@@ -1,8 +1,8 @@
 import { inject, Injectable, Type } from '@angular/core';
 import { from, Observable, of, tap } from 'rxjs';
+import { NgdfControlType } from './model/config';
 import { NgdfBaseControl } from './ngdf-base-control';
 import { NGDF_DYNAMIC_CONTROLS } from './providers';
-import { DynamicControlType } from './types';
 
 /**
  *
@@ -23,7 +23,7 @@ export class NgdfControlResolver {
    * @param type
    * @returns
    */
-  resolve(type: DynamicControlType): Observable<Type<NgdfBaseControl>> {
+  resolve(type: NgdfControlType): Observable<Type<NgdfBaseControl>> {
     if (!this.controls.has(type)) {
       if (!this.dynamicControls.get(type)) {
         throw new Error(

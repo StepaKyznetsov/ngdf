@@ -1,20 +1,21 @@
 import { AsyncValidator, AsyncValidatorFn, Validators } from '@angular/forms';
 
+type NgdfCompositeType = 'group' | 'array';
+
 /**
  * A basic set that will be expanded over time
  */
-export type DynamicControlType =
+export type NgdfControlType =
   | 'text'
   | 'password'
   | 'textarea'
   | 'number'
   | 'select'
   | 'toggle'
-  | 'group'
-  | 'array'
   | 'autocomplete'
   | 'checkbox'
-  | 'radio';
+  | 'radio'
+  | NgdfCompositeType;
 
 /**
  * Keys of configurable synchronous validators
@@ -54,11 +55,11 @@ export type ControlValidatorArgumentTypeByKey<T extends ControlValidatorKey> =
 /**
  * Config validators
  */
-export type DynamicControlValidators = {
+export type ControlValidators = {
   [key in ControlValidatorKey]?: ControlValidatorArgumentTypeByKey<key>;
 };
 
-type DynamicControlAsyncValidators =
+type ControlAsyncValidators =
   | AsyncValidator
   | AsyncValidator[]
   | AsyncValidatorFn
@@ -67,21 +68,23 @@ type DynamicControlAsyncValidators =
 /**
  * Base type for all dynamic controls
  */
-export interface DynamicAbstractControlConfig {
+export interface NgdfAbstractControlConfig {
   required?: boolean;
   hidden?: boolean;
   disabled?: boolean;
-  validators?: DynamicControlValidators;
-  asyncValidators?: DynamicControlAsyncValidators;
-  type: DynamicControlType;
+  label?: string;
+  validators?: ControlValidators;
+  asyncValidators?: ControlAsyncValidators;
+  type: NgdfControlType;
 }
 
 /**
  * Control / form field
  */
-export interface DynamicControlConfig<T = string>
-  extends DynamicAbstractControlConfig {
+export interface NgdfFormControlConfig<T = string>
+  extends NgdfAbstractControlConfig {
   options?: Option[];
+  placeholder?: string;
   value: T;
 }
 
@@ -93,14 +96,17 @@ export interface Option<T extends string | number = string> {
   value: T | null;
 }
 
+type CompositeControlType<T> = T extends unknown[] ? 'array' : 'group';
+
 /**
  * Control with nested controls.
  *
  * 'controls' property should be array or another object
  */
 export interface CompositeControl<T extends object>
-  extends DynamicAbstractControlConfig {
+  extends NgdfAbstractControlConfig {
   controls: T;
+  type: CompositeControlType<T>;
 }
 
 /**
@@ -108,18 +114,18 @@ export interface CompositeControl<T extends object>
  *
  * Based on {@link CompositeControl}
  */
-export type DynamicArrayControlConfig = CompositeControl<
-  DynamicControlConfig[]
->;
+export type NgdfFormArrayConfig = CompositeControl<NgdfFormControlConfig[]>;
 
 /**
  * Default form config
  *
  * Based on {@link CompositeControl}
  */
-export type DynamicFormConfig = CompositeControl<{
-  [key: string]:
-    | DynamicControlConfig
-    | DynamicArrayControlConfig
-    | DynamicFormConfig;
+export type NgdfFormGroupConfig = CompositeControl<{
+  [key: string]: NgdfControlConfig;
 }>;
+
+export type NgdfControlConfig =
+  | NgdfFormControlConfig
+  | NgdfFormArrayConfig
+  | NgdfFormGroupConfig;

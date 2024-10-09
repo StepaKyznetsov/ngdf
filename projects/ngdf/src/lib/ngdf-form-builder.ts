@@ -10,11 +10,11 @@ import {
   ControlValidatorArgumentTypeByKey,
   ControlValidatorKey,
   ControlValidatorKeyWithFnArgument,
-  DynamicArrayControlConfig,
-  DynamicControlConfig,
-  DynamicControlValidators,
-  DynamicFormConfig,
-} from './types/config';
+  ControlValidators,
+  NgdfFormArrayConfig,
+  NgdfFormControlConfig,
+  NgdfFormGroupConfig,
+} from './model/config';
 
 const VALIDATORS_WITH_ARGUMENT: ControlValidatorKey[] = [
   'min',
@@ -28,8 +28,8 @@ const VALIDATORS_WITH_ARGUMENT: ControlValidatorKey[] = [
  * Helper for narrowing (DynamicArrayControlConfig | DynamicFormConfig) type
  */
 const isDynamicArrayControlConfig = (
-  config: DynamicArrayControlConfig | DynamicFormConfig,
-): config is DynamicArrayControlConfig => Array.isArray(config.controls);
+  config: NgdfFormArrayConfig | NgdfFormGroupConfig,
+): config is NgdfFormArrayConfig => Array.isArray(config.controls);
 
 /**
  * Helper for narrowing (DynamicArrayControlConfig | DynamicFormConfig) type
@@ -55,7 +55,10 @@ export class NgdfFormBuilder {
    * Angular {@link FormGroup} creating from {@link DynamicFormConfig}
    * @param config lib's FormGroup config
    */
-  buildGroup(config: DynamicFormConfig, validators?: ValidatorFn[]): FormGroup {
+  buildGroup(
+    config: NgdfFormGroupConfig,
+    validators?: ValidatorFn[],
+  ): FormGroup {
     const formGroup = new FormGroup({}, validators);
     for (const [name, control] of Object.entries(config.controls)) {
       const validators = this.resolveValidators(control.validators);
@@ -78,7 +81,7 @@ export class NgdfFormBuilder {
    * @param arrayConfig lib's FormArray config
    */
   buildFormArray(
-    arrayConfig: DynamicArrayControlConfig,
+    arrayConfig: NgdfFormArrayConfig,
     validators?: ValidatorFn[],
   ): FormArray {
     return new FormArray(
@@ -92,7 +95,7 @@ export class NgdfFormBuilder {
    * @param controlConfig lib's DynamicControlConfig config
    */
   buildControl<T>(
-    controlConfig: DynamicControlConfig<T>,
+    controlConfig: NgdfFormControlConfig<T>,
     validators?: ValidatorFn[],
   ): FormControl {
     const { value, disabled } = controlConfig;
@@ -106,7 +109,7 @@ export class NgdfFormBuilder {
    * Method to get an array of Angular control validators from the {@link DynamicControlValidators}
    * @param validators object with { key : value } validators structure
    */
-  resolveValidators(validators?: DynamicControlValidators): ValidatorFn[] {
+  resolveValidators(validators?: ControlValidators): ValidatorFn[] {
     if (!validators) {
       return [];
     }

@@ -1,7 +1,7 @@
 import { Directive, inject, Input } from '@angular/core';
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import { NgdfFormGroupConfig } from '../model/config';
 import { NgdfFormBuilder } from '../ngdf-form-builder';
-import { DynamicFormConfig } from '../types';
 
 /**
  *
@@ -22,7 +22,7 @@ export class NgdfFormDirective extends FormGroupDirective {
    *
    */
   @Input()
-  set ngdfForm(formConfig: DynamicFormConfig) {
+  set ngdfForm(formConfig: NgdfFormGroupConfig) {
     this.form = this.ngdfFormBuilder.buildGroup(formConfig);
   }
 }

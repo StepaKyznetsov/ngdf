@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DynamicFormConfig, NgdfFormComponent, NgdfFormDirective } from 'ngdf';
+import {
+  NgdfFormComponent,
+  NgdfFormDirective,
+  NgdfFormGroupConfig,
+} from 'ngdf';
 
 @Component({
   selector: 'app-root',
@@ -11,12 +20,19 @@ import { DynamicFormConfig, NgdfFormComponent, NgdfFormDirective } from 'ngdf';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly config: DynamicFormConfig = {
+  private readonly a = signal<string>('123');
+
+  readonly b = {
+    disabled: computed(() => this.a()),
+  };
+
+  readonly config: NgdfFormGroupConfig = {
     validators: {},
     type: 'group',
     controls: {
       email: {
         value: '2',
+        label: 'test',
         type: 'text',
         validators: {
           required: true,

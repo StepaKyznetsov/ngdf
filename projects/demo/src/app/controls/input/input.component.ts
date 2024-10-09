@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, output, viewChild } from '@angular/core';
+import { Component, output, viewChild } from '@angular/core';
 import {
   ControlContainer,
   FormControlName,
   FormGroupDirective,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { NgdfBaseControl } from 'ngdf';
 
@@ -17,14 +18,18 @@ import { NgdfBaseControl } from 'ngdf';
     { provide: ControlContainer, useExisting: FormGroupDirective },
   ],
 })
-export class InputComponent extends NgdfBaseControl implements AfterViewInit {
+export class InputComponent extends NgdfBaseControl {
   readonly controlRef = viewChild(FormControlName);
 
   readonly value = output<string>();
 
-  ngAfterViewInit(): void {
-    this.controlRef()?.valueChanges?.subscribe((value) => {
-      this.value.emit(value);
-    });
+  click() {
+    this.controlConfig.update((prev) => ({
+      ...prev,
+      label: '',
+      validators: { ...prev.validators, required: false },
+    }));
+    this.controlRef()?.control.removeValidators(Validators.required);
+    this.controlRef()?.control.updateValueAndValidity();
   }
 }

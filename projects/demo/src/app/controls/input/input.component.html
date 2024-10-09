@@ -1,6 +1,16 @@
-@if (control()) {
-  @let name = control()!.key;
-  @let config = control()!.value;
+@let key = controlKey();
+@let config = controlConfig();
 
-  <input [formControlName]="name" [value]="config.value" />
+@if (config.label) {
+  <label [for]="key">{{ config.label }}</label>
 }
+<input
+  [id]="key"
+  [formControlName]="key"
+  [type]="config.type"
+  [value]="config.value"
+  [required]="!!config.validators?.required"
+/>
+
+{{ config.value }}
+<button (click)="click()">123</button>

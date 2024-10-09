@@ -1,11 +1,13 @@
 <form [ngdfForm]="config()">
   @for (control of config().controls | keyvalue; track $index) {
-    @let type = control.value.type;
+    @let controlKey = control.key;
+    @let controlConfig = control.value;
 
     <ng-container
-      [ngComponentOutlet]="ngdfControlResolver.resolve(type) | async"
-      [ngComponentOutletOutputs]="outputs"
-      [ngComponentOutletInputs]="{ control }"
+      *ngComponentOutlet="
+        ngdfControlResolver.resolve(controlConfig.type) | async;
+        inputs: { controlKey, controlConfig }
+      "
     />
   }
 </form>

@@ -3,13 +3,13 @@ import {
   InjectionToken,
   makeEnvironmentProviders,
 } from '@angular/core';
+import { NgdfControlType } from './model/config';
+import { NgdfControlLoaderFn } from './model/controls';
 import { NgdfBaseControl } from './ngdf-base-control';
-import { NgdfControlLoaderFn } from './types';
-import { DynamicControlType } from './types/config';
 
 /**
  * Name and config of ngdf control component
- * 
+ *
  * @deprecated
  */
 export const NGDF_CONTROL = new InjectionToken<NgdfBaseControl>(
@@ -20,7 +20,7 @@ export const NGDF_CONTROL = new InjectionToken<NgdfBaseControl>(
  * Array of registered dynamic components
  */
 export const NGDF_DYNAMIC_CONTROLS = new InjectionToken<
-  ReadonlyMap<DynamicControlType, NgdfControlLoaderFn>
+  ReadonlyMap<NgdfControlType, NgdfControlLoaderFn>
 >('Array of registered components for control types');
 
 /**
@@ -29,11 +29,11 @@ export const NGDF_DYNAMIC_CONTROLS = new InjectionToken<
  * @returns
  */
 export const provideNgdfDynamicControls = (controls: {
-  [key in DynamicControlType]?: NgdfControlLoaderFn;
+  [key in NgdfControlType]?: NgdfControlLoaderFn;
 }): EnvironmentProviders => {
-  const controlMap = new Map<DynamicControlType, NgdfControlLoaderFn>();
+  const controlMap = new Map<NgdfControlType, NgdfControlLoaderFn>();
   Object.entries(controls).forEach(([type, control]) =>
-    controlMap.set(type as DynamicControlType, control),
+    controlMap.set(type as NgdfControlType, control),
   );
 
   return makeEnvironmentProviders([
