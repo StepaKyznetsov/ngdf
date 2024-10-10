@@ -59,3 +59,9 @@ export const isValidatorKeyWithFnArgument = (
 
   return validatorsWithArgument.includes(key);
 };
+
+export const valueExist = (value: unknown): boolean =>
+  value !== undefined && value !== null;
+
+export const valueExistAndNotFalse = (value: unknown): boolean =>
+  valueExist(value) && value !== false;

@@ -15,10 +15,11 @@ import {
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
 } from './model/config';
-import { isFormArrayConfig, isValidatorKeyWithFnArgument } from './utils';
-
-const valueExistAndNotFalse = (value: unknown): boolean =>
-  value !== undefined && value !== null && value !== false;
+import {
+  isFormArrayConfig,
+  isValidatorKeyWithFnArgument,
+  valueExistAndNotFalse,
+} from './utils';
 
 /**
  * This is not a builder in the classical sense,
