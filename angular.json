@@ -30,10 +30,7 @@
             "tsConfig": "projects/ngdf/tsconfig.spec.json",
             "polyfills": ["zone.js", "zone.js/testing"],
             "karmaConfig": "projects/ngdf/karma.conf.js",
-            "include": [
-              "../test/**/**.spec.ts",
-              "../test/**/**.d.ts"
-            ]
+            "include": ["../test/**/**.spec.ts", "../test/**/**.d.ts"]
           }
         }
       }

@@ -1,9 +1,19 @@
-import { NgdfControlConfig, NgdfFormArrayConfig, NgdfFormGroupConfig } from '../src/lib/model/config';
-import { findControlInFormGroupConfig, isFormArrayConfig, isFormControlConfig, isFormGroupConfig, isValidatorKeyWithFnArgument } from '../src/lib/utils';
+import {
+  NgdfControlConfig,
+  NgdfFormArrayConfig,
+  NgdfFormGroupConfig,
+} from '../src/lib/model/config';
+import {
+  findControlInFormGroupConfig,
+  isFormArrayConfig,
+  isFormControlConfig,
+  isFormGroupConfig,
+  isValidatorKeyWithFnArgument,
+} from '../src/lib/utils';
 
 describe('utils', () => {
-  describe('findControlInFormGroupConfig', () => {
-    it('find control config in flat and nested structure, undefined otherwise', () => {
+  describe('[findControlInFormGroupConfig]', () => {
+    it('returns control config in flat and nested structure, undefined otherwise', () => {
       const formGroup: NgdfFormGroupConfig = {
         type: 'group',
         controls: {
@@ -40,25 +50,27 @@ describe('utils', () => {
         value: '123',
       });
 
-      expect(findControlInFormGroupConfig('age', formGroup, true)).toBeUndefined();
+      expect(
+        findControlInFormGroupConfig('age', formGroup, true),
+      ).toBeUndefined();
     });
   });
-  describe('type narrowing functions', () => {
-    it('correct narrow type with similar data types', () => {
+  describe('type narrowing fns', () => {
+    it('returns correct narrow type with similar data types', () => {
       const formControlConfig: NgdfControlConfig = {
-        'type': 'text',
-        value: ''
-      }
+        type: 'text',
+        value: '',
+      };
 
       const formArrayConfig: NgdfFormArrayConfig = {
         type: 'array',
-        controls: []
-      }
+        controls: [],
+      };
 
       const formGroupConfig: NgdfFormGroupConfig = {
         type: 'group',
-        controls: {}
-      }
+        controls: {},
+      };
 
       expect(isFormControlConfig(formControlConfig)).toBeTrue();
       expect(isFormArrayConfig(formControlConfig)).toBeFalse();

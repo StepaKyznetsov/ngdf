@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  AbstractControl,
   FormArray,
   FormControl,
   FormGroup,
@@ -11,12 +12,14 @@ import {
   ControlValidatorKey,
   ControlValidatorKeyWithFnArgument,
   ControlValidators,
+  NgdfControlConfig,
   NgdfFormArrayConfig,
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
 } from './model/config';
 import {
   isFormArrayConfig,
+  isFormGroupConfig,
   isValidatorKeyWithFnArgument,
   valueExistAndNotFalse,
 } from './utils';
@@ -38,18 +41,20 @@ export class NgdfFormBuilder {
     config: NgdfFormGroupConfig,
     validators?: ValidatorFn[],
   ): FormGroup {
+    // only root config case
+    if (!validators) {
+      validators = this.resolveValidators(config.validators);
+    }
+
     const formGroup = new FormGroup({}, validators);
     for (const [name, control] of Object.entries(config.controls)) {
-      const validators = this.resolveValidators(control.validators);
-      if ('controls' in control) {
-        if (isFormArrayConfig(control)) {
-          formGroup.addControl(name, this.buildFormArray(control, validators));
-        } else {
-          formGroup.addControl(name, this.buildGroup(control, validators));
-        }
-      } else {
-        formGroup.addControl(name, this.buildControl(control, validators));
-      }
+      const nestedControlvalidators = this.resolveValidators(
+        control.validators,
+      );
+      formGroup.addControl(
+        name,
+        this.generateControl(control, nestedControlvalidators),
+      );
     }
 
     return formGroup;
@@ -82,6 +87,19 @@ export class NgdfFormBuilder {
       { value, disabled: !!disabled },
       validators ?? this.resolveValidators(controlConfig.validators),
     );
+  }
+
+  private generateControl(
+    config: NgdfControlConfig,
+    validators: ValidatorFn[],
+  ): AbstractControl {
+    if (isFormGroupConfig(config)) {
+      return this.buildGroup(config, validators);
+    } else if (isFormArrayConfig(config)) {
+      return this.buildFormArray(config, validators);
+    }
+
+    return this.buildControl(config, validators);
   }
 
   /**

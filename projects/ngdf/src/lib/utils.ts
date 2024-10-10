@@ -1,10 +1,10 @@
 import {
-    ControlValidatorKey,
-    ControlValidatorKeyWithFnArgument,
-    NgdfControlConfig,
-    NgdfFormArrayConfig,
-    NgdfFormControlConfig,
-    NgdfFormGroupConfig,
+  ControlValidatorKey,
+  ControlValidatorKeyWithFnArgument,
+  NgdfControlConfig,
+  NgdfFormArrayConfig,
+  NgdfFormControlConfig,
+  NgdfFormGroupConfig,
 } from './model/config';
 
 export const findControlInFormGroupConfig = (
