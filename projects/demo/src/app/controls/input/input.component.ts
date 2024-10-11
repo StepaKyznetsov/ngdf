@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { Component, output, viewChild } from '@angular/core';
 import {
   ControlContainer,
@@ -11,7 +12,7 @@ import { NgdfBaseControl } from 'ngdf';
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, JsonPipe],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   viewProviders: [
@@ -27,7 +28,7 @@ export class InputComponent extends NgdfBaseControl {
     this.controlConfig.update((prev) => ({
       ...prev,
       label: '',
-      validators: { ...prev.validators, required: false },
+      validators: [...(prev.validators || []), { key: 'required' }],
     }));
     this.controlRef()?.control.removeValidators(Validators.required);
     this.controlRef()?.control.updateValueAndValidity();

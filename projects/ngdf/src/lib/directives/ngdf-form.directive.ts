@@ -18,9 +18,7 @@ import { NgdfFormBuilder } from '../ngdf-form-builder';
 })
 export class NgdfFormDirective extends FormGroupDirective {
   private readonly ngdfFormBuilder = inject(NgdfFormBuilder);
-  /**
-   *
-   */
+
   @Input()
   set ngdfForm(formConfig: NgdfFormGroupConfig) {
     this.form = this.ngdfFormBuilder.buildGroup(formConfig);

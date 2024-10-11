@@ -1,10 +1,18 @@
 import {
-  ControlValidatorKey,
-  ControlValidatorKeyWithFnArgument,
-  NgdfControlConfig,
-  NgdfFormArrayConfig,
-  NgdfFormControlConfig,
-  NgdfFormGroupConfig,
+    AbstractControl,
+    ValidationErrors,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
+import {
+    NgdfControlConfig,
+    NgdfFormArrayConfig,
+    NgdfFormControlConfig,
+    NgdfFormGroupConfig,
+    NgdfValidator,
+    ValidatorArgumentTypeByKey,
+    ValidatorKey,
+    ValidatorKeyWithFnArgument,
 } from './model/config';
 
 export const findControlInFormGroupConfig = (
@@ -47,9 +55,9 @@ export const isFormGroupConfig = (
   'controls' in config && !Array.isArray(config.controls);
 
 export const isValidatorKeyWithFnArgument = (
-  key: ControlValidatorKey,
-): key is ControlValidatorKeyWithFnArgument => {
-  const validatorsWithArgument: ControlValidatorKey[] = [
+  key: ValidatorKey,
+): key is ValidatorKeyWithFnArgument => {
+  const validatorsWithArgument: ValidatorKey[] = [
     'min',
     'max',
     'minLength',
@@ -63,5 +71,37 @@ export const isValidatorKeyWithFnArgument = (
 export const valueExist = (value: unknown): boolean =>
   value !== undefined && value !== null;
 
-export const valueExistAndNotFalse = (value: unknown): boolean =>
-  valueExist(value) && value !== false;
+export const wrapValidatorWithCustomErrorText = (
+  validator: NgdfValidator,
+): ValidatorFn | null => {
+  const { key, value, errorText } = validator;
+  const validatorFn = createValidatorFn(key, value);
+  if (!errorText || !validatorFn) {
+    return validatorFn;
+  }
+
+  return (control: AbstractControl): ValidationErrors | null => {
+    const error: ValidationErrors | null = validatorFn(control);
+
+    return error ? { [key]: errorText } : null;
+  };
+};
+
+export const createValidatorFn = (
+  key: ValidatorKey,
+  value?: ValidatorArgumentTypeByKey<typeof key>,
+): ValidatorFn | null => {
+  if (isValidatorKeyWithFnArgument(key)) {
+    if (!valueExist(value)) {
+      return null;
+    }
+
+    return Validators[key](value as ValidatorArgumentTypeByKey<typeof key>);
+  } else {
+    if (value === false) {
+      return null;
+    }
+
+    return Validators[key];
+  }
+};

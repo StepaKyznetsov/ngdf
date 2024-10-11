@@ -8,9 +8,9 @@
   [id]="key"
   [formControlName]="key"
   [type]="config.type"
-  [value]="config.value"
-  [required]="!!config.validators?.required"
+  [value]="controlRef()?.value"
 />
 
-{{ config.value }}
+{{ controlRef()?.errors | json }}
+
 <button (click)="click()">123</button>

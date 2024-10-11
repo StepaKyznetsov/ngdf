@@ -27,23 +27,32 @@ export class AppComponent {
   };
 
   readonly config: NgdfFormGroupConfig = {
-    validators: {},
     type: 'group',
     controls: {
       email: {
         value: '2',
         label: 'test',
         type: 'text',
-        validators: {
-          required: true,
-        },
+        validators: [
+          {
+            key: 'required',
+            errorText: 'valuerer'
+          },
+          {
+            key: 'minLength',
+            //@ts-expect-error 123
+            value: 2,
+          },
+        ],
       },
       phone: {
         value: '896444434',
         type: 'text',
-        validators: {
-          required: true,
-        },
+        validators: [
+          {
+            key: 'required',
+          },
+        ],
       },
     },
   };

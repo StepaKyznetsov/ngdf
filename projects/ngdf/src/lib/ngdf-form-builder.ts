@@ -5,23 +5,18 @@ import {
   FormControl,
   FormGroup,
   ValidatorFn,
-  Validators,
 } from '@angular/forms';
 import {
-  ControlValidatorArgumentTypeByKey,
-  ControlValidatorKey,
-  ControlValidatorKeyWithFnArgument,
-  ControlValidators,
   NgdfControlConfig,
   NgdfFormArrayConfig,
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
+  NgdfValidator,
 } from './model/config';
 import {
   isFormArrayConfig,
   isFormGroupConfig,
-  isValidatorKeyWithFnArgument,
-  valueExistAndNotFalse,
+  wrapValidatorWithCustomErrorText,
 } from './utils';
 
 /**
@@ -106,26 +101,13 @@ export class NgdfFormBuilder {
    * Method to get an array of Angular control validators from the {@link DynamicControlValidators}
    * @param validators object with { key : value } validators structure
    */
-  resolveValidators(validators?: ControlValidators): ValidatorFn[] {
+  resolveValidators(validators?: NgdfValidator[]): ValidatorFn[] {
     if (!validators) {
       return [];
     }
 
-    return Object.entries(validators)
-      .filter(
-        (
-          entry,
-        ): entry is [
-          ControlValidatorKey,
-          ControlValidatorArgumentTypeByKey<ControlValidatorKeyWithFnArgument>,
-        ] => valueExistAndNotFalse(entry[1]),
-      )
-      .map(([key, value]) => {
-        if (isValidatorKeyWithFnArgument(key)) {
-          return Validators[key](value);
-        }
-
-        return Validators[key];
-      });
+    return validators
+      .map(wrapValidatorWithCustomErrorText)
+      .filter((validator) => !!validator) as ValidatorFn[];
   }
 }

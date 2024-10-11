@@ -23,7 +23,7 @@ export type NgdfControlType =
  * @note clearer and easier-to-use way to get the name of validators
  * instead of using inheritance and exclusion keys in the {@link Validators} class
  */
-export type ControlValidatorKey =
+export type ValidatorKey =
   | 'min'
   | 'max'
   | 'minLength'
@@ -37,29 +37,38 @@ export type ControlValidatorKey =
 /**
  * Validator keys ...
  */
-export type ControlValidatorKeyWithFnArgument = Exclude<
-  ControlValidatorKey,
+export type ValidatorKeyWithFnArgument = Exclude<
+  ValidatorKey,
   'required' | 'requiredTrue' | 'nullValidator' | 'email'
 >;
 
 /**
- * Argument types for Validators keys from {@link ControlValidatorKey}
+ * Argument types for Validators keys from {@link ValidatorKey}
  */
-export type ControlValidatorArgumentTypeByKey<T extends ControlValidatorKey> =
+export type ValidatorArgumentTypeByKey<T extends ValidatorKey> =
   (typeof Validators)[T] extends (_: infer R) => unknown
-    ? T extends ControlValidatorKeyWithFnArgument
+    ? T extends ValidatorKeyWithFnArgument
       ? R
       : boolean
     : never;
 
 /**
- * Config validators
+ * Validator body
  */
-export type ControlValidators = {
-  [key in ControlValidatorKey]?: ControlValidatorArgumentTypeByKey<key>;
+export interface NgdfValidator<T extends ValidatorKey = ValidatorKey> {
+  key: T;
+  value?: ValidatorArgumentTypeByKey<T>;
+  errorText?: string;
+}
+
+/**
+ * Object with validators
+ */
+export type NgdfValidators = {
+  [key in ValidatorKey]?: NgdfValidator<key>;
 };
 
-type ControlAsyncValidators =
+type NgdfAsyncValidators =
   | AsyncValidator
   | AsyncValidator[]
   | AsyncValidatorFn
@@ -73,8 +82,8 @@ export interface NgdfAbstractControlConfig {
   hidden?: boolean;
   disabled?: boolean;
   label?: string;
-  validators?: ControlValidators;
-  asyncValidators?: ControlAsyncValidators;
+  validators?: NgdfValidator[];
+  asyncValidators?: NgdfAsyncValidators;
   type: NgdfControlType;
 }
 

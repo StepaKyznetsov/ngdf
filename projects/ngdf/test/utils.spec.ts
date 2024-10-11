@@ -1,14 +1,14 @@
 import {
-  NgdfControlConfig,
-  NgdfFormArrayConfig,
-  NgdfFormGroupConfig,
+    NgdfControlConfig,
+    NgdfFormArrayConfig,
+    NgdfFormGroupConfig,
 } from '../src/lib/model/config';
 import {
-  findControlInFormGroupConfig,
-  isFormArrayConfig,
-  isFormControlConfig,
-  isFormGroupConfig,
-  isValidatorKeyWithFnArgument,
+    findControlInFormGroupConfig,
+    isFormArrayConfig,
+    isFormControlConfig,
+    isFormGroupConfig,
+    isValidatorKeyWithFnArgument,
 } from '../src/lib/utils';
 
 describe('utils', () => {
@@ -20,9 +20,11 @@ describe('utils', () => {
           email: {
             type: 'text',
             value: '',
-            validators: {
-              email: true,
-            },
+            validators: [
+              {
+                key: 'email',
+              },
+            ],
           },
           password: {
             type: 'password',

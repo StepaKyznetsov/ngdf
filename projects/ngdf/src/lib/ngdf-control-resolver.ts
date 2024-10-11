@@ -13,16 +13,8 @@ import { NGDF_DYNAMIC_CONTROLS } from './providers';
 export class NgdfControlResolver {
   private readonly dynamicControls = inject(NGDF_DYNAMIC_CONTROLS);
 
-  /**
-   *
-   */
   private readonly controls = new Map<string, Type<NgdfBaseControl>>();
 
-  /**
-   *
-   * @param type
-   * @returns
-   */
   resolve(type: NgdfControlType): Observable<Type<NgdfBaseControl>> {
     if (!this.controls.has(type)) {
       if (!this.dynamicControls.get(type)) {
