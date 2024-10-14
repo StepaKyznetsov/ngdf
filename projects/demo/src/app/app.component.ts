@@ -33,26 +33,18 @@ export class AppComponent {
         value: '2',
         label: 'test',
         type: 'text',
-        validators: [
-          {
-            key: 'required',
-            errorText: 'valuerer'
-          },
-          {
-            key: 'minLength',
-            //@ts-expect-error 123
-            value: 2,
-          },
-        ],
+        validators: {
+          required: true,
+        }
       },
       phone: {
         value: '896444434',
         type: 'text',
-        validators: [
-          {
-            key: 'required',
-          },
-        ],
+        // validators: [
+        //   {
+        //     key: 'required',
+        //   },
+        // ],
       },
     },
   };

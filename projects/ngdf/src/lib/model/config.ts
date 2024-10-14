@@ -1,4 +1,4 @@
-import { AsyncValidator, AsyncValidatorFn, Validators } from '@angular/forms';
+import { ValidatorFn, Validators } from '@angular/forms';
 
 type NgdfCompositeType = 'group' | 'array';
 
@@ -46,33 +46,43 @@ export type ValidatorKeyWithFnArgument = Exclude<
  * Argument types for Validators keys from {@link ValidatorKey}
  */
 export type ValidatorArgumentTypeByKey<T extends ValidatorKey> =
-  (typeof Validators)[T] extends (_: infer R) => unknown
-    ? T extends ValidatorKeyWithFnArgument
-      ? R
-      : boolean
-    : never;
+  T extends ValidatorKeyWithFnArgument
+    ? (typeof Validators)[T] extends (_: infer R) => ValidatorFn
+      ? R extends unknown[]
+        ? never
+        : R
+      : never
+    : boolean;
 
-/**
- * Validator body
- */
-export interface NgdfValidator<T extends ValidatorKey = ValidatorKey> {
-  key: T;
+export interface NgdfValidatorBody<T extends ValidatorKey> {
   value?: ValidatorArgumentTypeByKey<T>;
   errorText?: string;
 }
 
-/**
- * Object with validators
- */
+export type ValidatorArgument<T extends keyof typeof Validators> =
+  T extends 'pattern'
+    ? RegExp | string
+    : T extends 'max'
+      ? number
+      : T extends 'min'
+        ? number
+        : T extends 'minLength'
+          ? number
+          : T extends 'maxLength'
+            ? number
+            : boolean;
+
+export type NgdfValidatorValue<T extends ValidatorKey> =
+  | NgdfValidatorBody<T>
+  | ValidatorArgumentTypeByKey<T>;
+
 export type NgdfValidators = {
-  [key in ValidatorKey]?: NgdfValidator<key>;
+  [key in ValidatorKey]?: NgdfValidatorValue<key>;
 };
 
-type NgdfAsyncValidators =
-  | AsyncValidator
-  | AsyncValidator[]
-  | AsyncValidatorFn
-  | AsyncValidatorFn[];
+export type EntryTuple<T extends object> = {
+  [key in keyof T]: [key, Exclude<T[key], string>];
+}[keyof T];
 
 /**
  * Base type for all dynamic controls / arrays / groups
@@ -82,8 +92,8 @@ export interface NgdfAbstractControlConfig {
   hidden?: boolean;
   disabled?: boolean;
   label?: string;
-  validators?: NgdfValidator[];
-  asyncValidators?: NgdfAsyncValidators;
+  validators?: NgdfValidators;
+  // asyncValidators?: NgdfAsyncValidators;
   type: NgdfControlType;
 }
 

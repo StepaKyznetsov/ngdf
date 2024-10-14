@@ -11,12 +11,11 @@ import {
   NgdfFormArrayConfig,
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
-  NgdfValidator,
+  NgdfValidators,
 } from './model/config';
 import {
   isFormArrayConfig,
-  isFormGroupConfig,
-  wrapValidatorWithCustomErrorText,
+  isFormGroupConfig
 } from './utils';
 
 /**
@@ -101,13 +100,11 @@ export class NgdfFormBuilder {
    * Method to get an array of Angular control validators from the {@link DynamicControlValidators}
    * @param validators object with { key : value } validators structure
    */
-  resolveValidators(validators?: NgdfValidator[]): ValidatorFn[] {
+  resolveValidators(validators?: NgdfValidators): ValidatorFn[] {
     if (!validators) {
       return [];
     }
 
-    return validators
-      .map(wrapValidatorWithCustomErrorText)
-      .filter((validator) => !!validator) as ValidatorFn[];
+    return  [];
   }
 }

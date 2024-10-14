@@ -1,18 +1,12 @@
 import {
-    AbstractControl,
-    ValidationErrors,
-    ValidatorFn,
-    Validators,
-} from '@angular/forms';
-import {
-    NgdfControlConfig,
-    NgdfFormArrayConfig,
-    NgdfFormControlConfig,
-    NgdfFormGroupConfig,
-    NgdfValidator,
-    ValidatorArgumentTypeByKey,
-    ValidatorKey,
-    ValidatorKeyWithFnArgument,
+  NgdfControlConfig,
+  NgdfFormArrayConfig,
+  NgdfFormControlConfig,
+  NgdfFormGroupConfig,
+  NgdfValidators,
+  NgdfValidatorValue,
+  ValidatorKey,
+  ValidatorKeyWithFnArgument,
 } from './model/config';
 
 export const findControlInFormGroupConfig = (
@@ -68,40 +62,52 @@ export const isValidatorKeyWithFnArgument = (
   return validatorsWithArgument.includes(key);
 };
 
+export const isObject = (value: unknown): value is object =>
+  typeof value === 'object';
+
+export const isRegExp = (value: unknown): value is RegExp =>
+  value instanceof RegExp;
+
 export const valueExist = (value: unknown): boolean =>
   value !== undefined && value !== null;
 
-export const wrapValidatorWithCustomErrorText = (
-  validator: NgdfValidator,
-): ValidatorFn | null => {
-  const { key, value, errorText } = validator;
-  const validatorFn = createValidatorFn(key, value);
-  if (!errorText || !validatorFn) {
-    return validatorFn;
-  }
+export const wrapValidatorsWithCustomData = (
+  validators: NgdfValidators,
+): void => {
+  (
+    Object.entries(validators) as [
+      ValidatorKey,
+      NgdfValidatorValue<ValidatorKey>,
+    ][]
+  )
+    .map(() => {
+      // if (isObject(value) && !isRegExp(value)) {
+      //   if (isValidatorKeyWithFnArgument(key) && value.value && typeof value.value !== 'boolean') {
+      //     // TODO: fix typing
+      //     return Validators[key](value.value);
+      //   } else if (typeof value.value !== 'boolean') {
+      //     return Validators[key];
+      //   }
+      // } else {
+      //   if (typeof value === 'boolean') {
+      //     return Validators[key];
+      //   } else if (isValidatorKeyWithFnArgument(key)) {
+      //     const a = Validators[key];
+      //     return Validators[key](value);
+      //   }
+      // }
 
-  return (control: AbstractControl): ValidationErrors | null => {
-    const error: ValidationErrors | null = validatorFn(control);
-
-    return error ? { [key]: errorText } : null;
-  };
-};
-
-export const createValidatorFn = (
-  key: ValidatorKey,
-  value?: ValidatorArgumentTypeByKey<typeof key>,
-): ValidatorFn | null => {
-  if (isValidatorKeyWithFnArgument(key)) {
-    if (!valueExist(value)) {
       return null;
-    }
+    })
+    .filter((v) => !!v);
+  // const validatorFn = createValidatorFn(validator);
+  // if (!errorText || !validatorFn) {
+  //   return validatorFn;
+  // }
 
-    return Validators[key](value as ValidatorArgumentTypeByKey<typeof key>);
-  } else {
-    if (value === false) {
-      return null;
-    }
+  // return (control: AbstractControl): ValidationErrors | null => {
+  //   const error: ValidationErrors | null = validatorFn(control);
 
-    return Validators[key];
-  }
+  //   return error ? { [key]: errorText } : null;
+  // };
 };

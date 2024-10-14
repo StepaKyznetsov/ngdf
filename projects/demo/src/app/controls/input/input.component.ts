@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, output, viewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import {
   ControlContainer,
   FormControlName,
@@ -20,15 +20,13 @@ import { NgdfBaseControl } from 'ngdf';
   ],
 })
 export class InputComponent extends NgdfBaseControl {
-  readonly controlRef = viewChild(FormControlName);
-
-  readonly value = output<string>();
-
+  protected readonly controlRef = viewChild(FormControlName);
+ 
   click() {
     this.controlConfig.update((prev) => ({
       ...prev,
       label: '',
-      validators: [...(prev.validators || []), { key: 'required' }],
+      // validators: [...(prev.validators || []), { key: 'required' }],
     }));
     this.controlRef()?.control.removeValidators(Validators.required);
     this.controlRef()?.control.updateValueAndValidity();
