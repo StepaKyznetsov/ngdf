@@ -1,20 +1,35 @@
 import { NgdfFormControlConfig } from './config';
 
-type DefaultDependencyMode = 'boolean' | 'boolean-invert' | 'copy';
+export type DefaultDependencyMode = 'copy';
 
-interface DefaultModeDependency {
-  mode: DefaultDependencyMode;
-}
+export type ValueFromDependencyMode = 'value-from' | 'value-from-invert';
 
-type ValueFromDependencyMode = 'value-from' | 'value-from-invert';
-
-interface ValueFromModeDependency {
+interface ValueFromDependencyModeData {
   mode: ValueFromDependencyMode;
   fromObject: object;
+}
+
+export type BooleanDependencyMode = 'boolean' | 'boolean-invert';
+
+export type DependencyMode =
+  | DefaultDependencyMode
+  | ValueFromDependencyMode
+  | BooleanDependencyMode;
+
+export interface BaseDependencyModeData {
+  mode: Exclude<DependencyMode, ValueFromDependencyMode>;
 }
 
 export type DependentProperty = keyof NgdfFormControlConfig;
 
 export type FieldDependency = {
   observedProp: DependentProperty;
-} & (DefaultModeDependency | ValueFromModeDependency);
+} & ValueFromDependencyModeData;
+
+export interface A {
+  t(): void;
+}
+
+export type ValueConverterFn = <T, U extends DependencyMode>(
+  value: T,
+) => U extends DefaultDependencyMode ? T : boolean;

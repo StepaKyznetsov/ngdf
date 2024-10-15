@@ -119,13 +119,16 @@ export class NgdfFormBuilder {
     return this.createValidatorsWithCustomData(validators);
   }
 
+  /**
+   *
+   * @param validators
+   */
   private createValidatorsWithCustomData(
     validators: NgdfValidators,
   ): ValidatorFn[] {
     return (Object.entries(validators) as [ValidatorKey, NgdfValidatorValue][])
       .map(([key, validatorBody]) => {
         const validatorFn = this.createValidatorFn(key, validatorBody);
-
         if (
           !isRegExp(validatorBody) &&
           isObject(validatorBody) &&
@@ -144,6 +147,31 @@ export class NgdfFormBuilder {
       .filter(isTruthy);
   }
 
+  /**
+   * ```ts
+   * const validators = {
+   *   required: true;
+   *   min: 2
+   * }
+   * ```
+   * OR
+   * ```ts
+   * const validators = {
+   *   required: {
+   *     value: true,
+   *     errorText: 'You must type something here'
+   *   };
+   *   min: {
+   *     value: 4,
+   *     errorText: 'Value should be at least 4 chars'
+   *   }
+   * }
+   * ```
+   *
+   * @param key validator key
+   * @param validatorBody validator body
+   * @returns
+   */
   private createValidatorFn(
     key: ValidatorKey,
     validatorBody: NgdfValidatorValue,
