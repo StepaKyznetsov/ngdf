@@ -1,0 +1,12 @@
+@let key = controlKey();
+@let config = controlConfig();
+
+@if (config.label) {
+  <label [for]="key">{{ config.label }}</label>
+}
+
+<input [id]="key" [formControlName]="key" [type]="config.type" />
+
+{{ controlRef()?.errors | json }}
+
+<button (click)="click()">123</button>

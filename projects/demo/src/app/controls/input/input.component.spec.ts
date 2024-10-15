@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NgdfComponent } from './ngdf.component';
+import { InputComponent } from './input.component';
 
-describe('NgdfComponent', () => {
-  let component: NgdfComponent;
-  let fixture: ComponentFixture<NgdfComponent>;
+describe('InputComponent', () => {
+  let component: InputComponent;
+  let fixture: ComponentFixture<InputComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NgdfComponent],
+      imports: [InputComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NgdfComponent);
+    fixture = TestBed.createComponent(InputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
