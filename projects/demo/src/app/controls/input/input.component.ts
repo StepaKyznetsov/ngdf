@@ -21,7 +21,7 @@ import { NgdfBaseControl } from 'ngdf';
 })
 export class InputComponent extends NgdfBaseControl {
   protected readonly controlRef = viewChild(FormControlName);
- 
+
   click() {
     this.controlConfig.update((prev) => ({
       ...prev,

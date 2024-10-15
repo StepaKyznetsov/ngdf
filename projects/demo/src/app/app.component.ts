@@ -35,7 +35,7 @@ export class AppComponent {
         type: 'text',
         validators: {
           required: true,
-        }
+        },
       },
       phone: {
         value: '896444434',

@@ -48,29 +48,18 @@ export type ValidatorKeyWithFnArgument = Exclude<
 export type ValidatorArgumentTypeByKey<T extends ValidatorKey> =
   T extends ValidatorKeyWithFnArgument
     ? (typeof Validators)[T] extends (_: infer R) => ValidatorFn
-      ? R extends unknown[]
-        ? never
-        : R
+      ? R
       : never
     : boolean;
+
+export type ValidatorFnWrapper = (
+  _: ValidatorArgumentTypeByKey<ValidatorKeyWithFnArgument>,
+) => ValidatorFn;
 
 export interface NgdfValidatorBody<T extends ValidatorKey> {
   value?: ValidatorArgumentTypeByKey<T>;
   errorText?: string;
 }
-
-export type ValidatorArgument<T extends keyof typeof Validators> =
-  T extends 'pattern'
-    ? RegExp | string
-    : T extends 'max'
-      ? number
-      : T extends 'min'
-        ? number
-        : T extends 'minLength'
-          ? number
-          : T extends 'maxLength'
-            ? number
-            : boolean;
 
 export type NgdfValidatorValue<T extends ValidatorKey> =
   | NgdfValidatorBody<T>

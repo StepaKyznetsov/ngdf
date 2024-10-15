@@ -13,10 +13,7 @@ import {
   NgdfFormGroupConfig,
   NgdfValidators,
 } from './model/config';
-import {
-  isFormArrayConfig,
-  isFormGroupConfig
-} from './utils';
+import { isFormArrayConfig, isFormGroupConfig } from './utils';
 
 /**
  * This is not a builder in the classical sense,
@@ -105,6 +102,6 @@ export class NgdfFormBuilder {
       return [];
     }
 
-    return  [];
+    return [];
   }
 }

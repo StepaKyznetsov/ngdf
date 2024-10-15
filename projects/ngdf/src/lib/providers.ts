@@ -1,8 +1,4 @@
-import {
-  EnvironmentProviders,
-  InjectionToken,
-  makeEnvironmentProviders,
-} from '@angular/core';
+import { InjectionToken, Provider } from '@angular/core';
 import { NgdfControlType } from './model/config';
 import { NgdfControlLoaderFn } from './model/controls';
 import { NgdfBaseControl } from './ngdf-base-control';
@@ -30,16 +26,14 @@ export const NGDF_DYNAMIC_CONTROLS = new InjectionToken<
  */
 export const provideNgdfDynamicControls = (controls: {
   [key in NgdfControlType]?: NgdfControlLoaderFn;
-}): EnvironmentProviders => {
+}): Provider => {
   const controlMap = new Map<NgdfControlType, NgdfControlLoaderFn>();
   Object.entries(controls).forEach(([type, control]) =>
     controlMap.set(type as NgdfControlType, control),
   );
 
-  return makeEnvironmentProviders([
-    {
-      provide: NGDF_DYNAMIC_CONTROLS,
-      useValue: controlMap,
-    },
-  ]);
+  return {
+    provide: NGDF_DYNAMIC_CONTROLS,
+    useValue: controlMap,
+  };
 };

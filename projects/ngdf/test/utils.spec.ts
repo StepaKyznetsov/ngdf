@@ -21,8 +21,8 @@ describe('utils', () => {
             type: 'text',
             value: '',
             validators: {
-              email: true
-            }
+              email: true,
+            },
           },
           password: {
             type: 'password',
