@@ -1,15 +1,5 @@
 import { InjectionToken, Provider } from '@angular/core';
 import { NgdfControlLoaderFn, NgdfControlType } from './model';
-import { NgdfBaseControl } from './ngdf-base-control';
-
-/**
- * Name and config of ngdf control component
- *
- * @deprecated
- */
-export const NGDF_CONTROL = new InjectionToken<NgdfBaseControl>(
-  'ngdf control data',
-);
 
 /**
  * Array of registered dynamic components

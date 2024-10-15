@@ -26,10 +26,6 @@ export type FieldDependency = {
   observedProp: DependentProperty;
 } & ValueFromDependencyModeData;
 
-export interface A {
-  t(): void;
-}
-
 export type ValueConverterFn = <T, U extends DependencyMode>(
   value: T,
 ) => U extends DefaultDependencyMode ? T : boolean;
