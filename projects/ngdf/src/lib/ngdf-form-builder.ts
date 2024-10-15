@@ -4,7 +4,9 @@ import {
   FormArray,
   FormControl,
   FormGroup,
+  ValidationErrors,
   ValidatorFn,
+  Validators,
 } from '@angular/forms';
 import {
   NgdfControlConfig,
@@ -12,8 +14,20 @@ import {
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
   NgdfValidators,
-} from './model/config';
-import { isFormArrayConfig, isFormGroupConfig } from './utils';
+  NgdfValidatorValue,
+  ValidatorKey,
+  ValidatorWrapperFn,
+} from './model';
+import {
+  isBoolean,
+  isDefined,
+  isFormArrayConfig,
+  isFormGroupConfig,
+  isObject,
+  isRegExp,
+  isTruthy,
+  isValidatorKeyWithWrapperFn,
+} from './utils';
 
 /**
  * This is not a builder in the classical sense,
@@ -102,6 +116,60 @@ export class NgdfFormBuilder {
       return [];
     }
 
-    return [];
+    return this.createValidatorsWithCustomData(validators);
+  }
+
+  private createValidatorsWithCustomData(
+    validators: NgdfValidators,
+  ): ValidatorFn[] {
+    return (Object.entries(validators) as [ValidatorKey, NgdfValidatorValue][])
+      .map(([key, validatorBody]) => {
+        const validatorFn = this.createValidatorFn(key, validatorBody);
+
+        if (
+          !isRegExp(validatorBody) &&
+          isObject(validatorBody) &&
+          validatorFn
+        ) {
+          return (control: AbstractControl): ValidationErrors | null => {
+            const { errorText } = validatorBody;
+            const error: ValidationErrors | null = validatorFn(control);
+
+            return error ? { [key]: errorText } : null;
+          };
+        }
+
+        return validatorFn;
+      })
+      .filter(isTruthy);
+  }
+
+  private createValidatorFn(
+    key: ValidatorKey,
+    validatorBody: NgdfValidatorValue,
+  ): ValidatorFn | null {
+    const withWrapperArgument = isValidatorKeyWithWrapperFn(key);
+    // TODO: refactor
+    if (isObject(validatorBody) && !isRegExp(validatorBody)) {
+      if (
+        withWrapperArgument &&
+        isDefined(validatorBody.value) &&
+        !isBoolean(validatorBody.value)
+      ) {
+        return (Validators[key] as ValidatorWrapperFn)(validatorBody.value);
+      }
+
+      return !withWrapperArgument ? Validators[key] : null;
+    }
+
+    if (!withWrapperArgument && isBoolean(validatorBody)) {
+      return Validators[key];
+    }
+
+    if (withWrapperArgument && !isBoolean(validatorBody)) {
+      return (Validators[key] as ValidatorWrapperFn)(validatorBody);
+    }
+
+    return null;
   }
 }

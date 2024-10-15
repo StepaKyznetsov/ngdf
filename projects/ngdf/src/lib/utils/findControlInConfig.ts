@@ -1,4 +1,4 @@
-import { NgdfControlConfig, NgdfFormGroupConfig } from '../model/config';
+import { NgdfControlConfig, NgdfFormGroupConfig } from '../model';
 import { isFormGroupConfig } from './type-narrowing';
 
 /**

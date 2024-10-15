@@ -37,7 +37,7 @@ export type ValidatorKey =
 /**
  * Validator keys ...
  */
-export type ValidatorKeyWithFnArgument = Exclude<
+export type ValidatorKeyWithWrapperFn = Exclude<
   ValidatorKey,
   'required' | 'requiredTrue' | 'nullValidator' | 'email'
 >;
@@ -46,32 +46,28 @@ export type ValidatorKeyWithFnArgument = Exclude<
  * Argument types for Validators keys from {@link ValidatorKey}
  */
 export type ValidatorArgumentTypeByKey<T extends ValidatorKey> =
-  T extends ValidatorKeyWithFnArgument
+  T extends ValidatorKeyWithWrapperFn
     ? (typeof Validators)[T] extends (_: infer R) => ValidatorFn
       ? R
       : never
     : boolean;
 
-export type ValidatorFnWrapper = (
-  _: ValidatorArgumentTypeByKey<ValidatorKeyWithFnArgument>,
+export type ValidatorWrapperFn = (
+  _: ValidatorArgumentTypeByKey<ValidatorKeyWithWrapperFn>,
 ) => ValidatorFn;
 
-export interface NgdfValidatorBody<T extends ValidatorKey> {
+export interface NgdfValidatorBody<T extends ValidatorKey = ValidatorKey> {
   value?: ValidatorArgumentTypeByKey<T>;
   errorText?: string;
 }
 
-export type NgdfValidatorValue<T extends ValidatorKey> =
+export type NgdfValidatorValue<T extends ValidatorKey = ValidatorKey> =
   | NgdfValidatorBody<T>
   | ValidatorArgumentTypeByKey<T>;
 
 export type NgdfValidators = {
   [key in ValidatorKey]?: NgdfValidatorValue<key>;
 };
-
-export type EntryTuple<T extends object> = {
-  [key in keyof T]: [key, Exclude<T[key], string>];
-}[keyof T];
 
 /**
  * Base type for all dynamic controls / arrays / groups

@@ -1,6 +1,6 @@
 import { inject, Injectable, Type } from '@angular/core';
 import { from, Observable, of, tap } from 'rxjs';
-import { NgdfControlType } from './model/config';
+import { NgdfControlType } from './model';
 import { NgdfBaseControl } from './ngdf-base-control';
 import { NGDF_DYNAMIC_CONTROLS } from './providers';
 

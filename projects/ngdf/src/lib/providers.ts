@@ -1,6 +1,5 @@
 import { InjectionToken, Provider } from '@angular/core';
-import { NgdfControlType } from './model/config';
-import { NgdfControlLoaderFn } from './model/controls';
+import { NgdfControlLoaderFn, NgdfControlType } from './model';
 import { NgdfBaseControl } from './ngdf-base-control';
 
 /**

@@ -1,5 +1,5 @@
 import { INJECTOR, Injector, Pipe, PipeTransform, inject } from '@angular/core';
-import { NgdfControlConfig } from '../model/config';
+import { NgdfControlConfig } from '../model';
 import { NGDF_CONTROL } from '../providers';
 
 /**

@@ -3,10 +3,10 @@ import {
   NgdfFormArrayConfig,
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
+  Truthy,
   ValidatorKey,
-  ValidatorKeyWithFnArgument,
-} from '../model/config';
-import { Truthy } from '../model/util-types';
+  ValidatorKeyWithWrapperFn,
+} from '../model';
 
 /**
  * Whether the value is of type NgdfFormControlConfig
@@ -32,12 +32,12 @@ export const isFormGroupConfig = (
   'controls' in config && !Array.isArray(config.controls);
 
 /**
- * Whether the value is of type isValidatorKeyWithFnArgument
+ * Whether the value is of type ValidatorKeyWithWrapperFn
  * ('max' | 'min' | 'pattern' | 'maxLength' | 'minLength')
  */
-export const isValidatorKeyWithFnArgument = (
+export const isValidatorKeyWithWrapperFn = (
   key: ValidatorKey,
-): key is ValidatorKeyWithFnArgument => {
+): key is ValidatorKeyWithWrapperFn => {
   const validatorsWithArgument: ValidatorKey[] = [
     'min',
     'max',
