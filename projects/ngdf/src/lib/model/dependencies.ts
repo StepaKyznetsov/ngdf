@@ -1,31 +1,61 @@
-import { NgdfFormControlConfig } from './config';
+import { NgdfFormControlConfig, ValidatorKey } from './config';
 
-export type DefaultDependencyMode = 'copy';
+export type CopyDependencyMode = 'copy';
 
-export type ValueFromDependencyMode = 'value-from' | 'value-from-invert';
+export type ValueFromDependencyMode = 'valueFrom' | 'valueFromInvert';
 
 interface ValueFromDependencyModeData {
-  mode: ValueFromDependencyMode;
   fromObject: object;
 }
 
-export type BooleanDependencyMode = 'boolean' | 'boolean-invert';
+export type BooleanDependencyMode = 'boolean' | 'booleanInvert';
+
+export type ConstDependencyMode =
+  | 'toValue'
+  | 'toNull'
+  | 'toEmptyString'
+  | 'toTrue'
+  | 'toFalse';
+
+export interface ConstDependencyModeData<T = unknown> {
+  value: T;
+}
 
 export type DependencyMode =
-  | DefaultDependencyMode
+  | CopyDependencyMode
   | ValueFromDependencyMode
-  | BooleanDependencyMode;
+  | BooleanDependencyMode
+  | ConstDependencyMode;
 
 export interface BaseDependencyModeData {
   mode: Exclude<DependencyMode, ValueFromDependencyMode>;
 }
 
-export type DependentProperty = keyof NgdfFormControlConfig;
+export type ChangeableProperty =
+  | Exclude<keyof NgdfFormControlConfig, 'validators' | 'type'>
+  | ValidatorKey;
 
-export type FieldDependency = {
-  observedProp: DependentProperty;
-} & ValueFromDependencyModeData;
+export interface ObservedControl {
+  key: string;
+  property: ChangeableProperty;
+}
+
+export type CrossControlDependency<T extends DependencyMode> = {
+  observedControl: ObservedControl;
+  dependentProperty: ChangeableProperty;
+  mode: T;
+} & T extends 'toValue'
+  ? ConstDependencyModeData
+  : T extends ValueFromDependencyMode
+    ? ValueFromDependencyModeData
+    : never;
 
 export type ValueConverterFn = <T, U extends DependencyMode>(
-  value: T,
-) => U extends DefaultDependencyMode ? T : boolean;
+  value?: T,
+) => U extends CopyDependencyMode | 'toValue'
+  ? T
+  : U extends 'toNull'
+    ? null
+    : U extends 'toEmptyString'
+      ? string
+      : boolean;

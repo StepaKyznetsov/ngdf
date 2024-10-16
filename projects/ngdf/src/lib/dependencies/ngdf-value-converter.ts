@@ -28,4 +28,24 @@ export class NgdfValueConverter {
   ): boolean {
     return !this.valueFrom(value, fromObject);
   }
+
+  static toValue<T = unknown>(value: T): T {
+    return value;
+  }
+
+  static toNull(): null {
+    return null;
+  }
+
+  static toEmptyString(): string {
+    return '';
+  }
+
+  static toTrue(): boolean {
+    return true;
+  }
+
+  static toFalse(): boolean {
+    return false;
+  }
 }
