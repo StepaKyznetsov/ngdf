@@ -50,12 +50,12 @@ export type CrossControlDependency<T extends DependencyMode> = {
     ? ValueFromDependencyModeData
     : never;
 
-export type ValueConverterFn = <T, U extends DependencyMode>(
-  value?: T,
-) => U extends CopyDependencyMode | 'toValue'
-  ? T
-  : U extends 'toNull'
+export type ValueConverterFn = <T extends DependencyMode, U = unknown>(
+  value?: U,
+) => T extends CopyDependencyMode | 'toValue'
+  ? U
+  : T extends 'toNull'
     ? null
-    : U extends 'toEmptyString'
+    : T extends 'toEmptyString'
       ? string
       : boolean;
