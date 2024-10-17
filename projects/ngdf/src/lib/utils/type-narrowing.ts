@@ -6,7 +6,7 @@ import {
   Truthy,
   ValidatorKey,
   ValidatorKeyWithWrapperFn,
-} from '../model';
+} from '../types';
 
 /**
  * Whether the value is of type NgdfFormControlConfig

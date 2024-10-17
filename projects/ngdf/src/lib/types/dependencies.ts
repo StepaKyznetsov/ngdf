@@ -21,11 +21,24 @@ export interface ConstDependencyModeData<T = unknown> {
   value: T;
 }
 
+export type ComparisonDependencyMode = 'equal' | 'more' | 'less';
+
+export type StatusDependencyMode =
+  | 'touched'
+  | 'pristine'
+  | 'valid'
+  | 'invalid'
+  | 'pending'
+  | 'dirty'
+  | 'untouched';
+
 export type DependencyMode =
   | CopyDependencyMode
   | ValueFromDependencyMode
   | BooleanDependencyMode
-  | ConstDependencyMode;
+  | ConstDependencyMode
+  | ComparisonDependencyMode
+  | StatusDependencyMode;
 
 export interface BaseDependencyModeData {
   mode: Exclude<DependencyMode, ValueFromDependencyMode>;
@@ -35,20 +48,21 @@ export type ChangeableProperty =
   | Exclude<keyof NgdfFormControlConfig, 'validators' | 'type'>
   | ValidatorKey;
 
-export interface ObservedControl {
+export interface DependentControl {
   key: string;
   property: ChangeableProperty;
 }
 
-export type CrossControlDependency<T extends DependencyMode> = {
-  observedControl: ObservedControl;
-  dependentProperty: ChangeableProperty;
-  mode: T;
-} & T extends 'toValue'
-  ? ConstDependencyModeData
-  : T extends ValueFromDependencyMode
-    ? ValueFromDependencyModeData
-    : never;
+export type CrossControlDependency<T extends DependencyMode = DependencyMode> =
+  {
+    control: DependentControl;
+    mode: T;
+  };
+// & T extends 'toValue'
+//   ? ConstDependencyModeData
+//   : T extends ValueFromDependencyMode
+//     ? ValueFromDependencyModeData
+//     : never;
 
 export type ValueConverterFn = <T extends DependencyMode, U = unknown>(
   value?: U,

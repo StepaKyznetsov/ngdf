@@ -11,8 +11,8 @@ import {
   input,
 } from '@angular/core';
 import { NgdfFormDirective } from '../directives/ngdf-form.directive';
-import { NgdfFormGroupConfig } from '../model';
 import { NgdfControlResolver } from '../ngdf-control-resolver';
+import { NgdfFormGroupConfig } from '../types';
 
 /**
  * Key component of the "ngdf" library

@@ -1,2 +1,2 @@
-export * from './findControlInConfig';
+export * from './findControl';
 export * from './type-narrowing';

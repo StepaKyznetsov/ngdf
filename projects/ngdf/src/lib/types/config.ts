@@ -73,7 +73,6 @@ export type NgdfValidators = {
  * Base type for all dynamic controls / arrays / groups
  */
 export interface NgdfAbstractControlConfig {
-  required?: boolean;
   hidden?: boolean;
   disabled?: boolean;
   label?: string;

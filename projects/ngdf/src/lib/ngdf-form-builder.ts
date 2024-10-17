@@ -17,7 +17,7 @@ import {
   NgdfValidatorValue,
   ValidatorKey,
   ValidatorWrapperFn,
-} from './model';
+} from './types';
 import {
   isBoolean,
   isDefined,

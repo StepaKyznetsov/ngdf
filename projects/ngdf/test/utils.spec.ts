@@ -2,13 +2,13 @@ import {
   NgdfControlConfig,
   NgdfFormArrayConfig,
   NgdfFormGroupConfig,
-} from '../src/lib/model/config';
+} from '../src/lib/types/config';
 import {
-  findControlInFormGroupConfig,
+  findControlInConfig,
   isFormArrayConfig,
   isFormControlConfig,
   isFormGroupConfig,
-  isValidatorKeyWithFnArgument,
+  isValidatorKeyWithWrapperFn,
 } from '../src/lib/utils';
 
 describe('utils', () => {
@@ -40,19 +40,17 @@ describe('utils', () => {
         },
       };
 
-      expect(findControlInFormGroupConfig('password', formGroup)).toEqual({
+      expect(findControlInConfig('password', formGroup)).toEqual({
         type: 'password',
         value: '',
       });
 
-      expect(findControlInFormGroupConfig('login', formGroup, true)).toEqual({
+      expect(findControlInConfig('login', formGroup, true)).toEqual({
         type: 'text',
         value: '123',
       });
 
-      expect(
-        findControlInFormGroupConfig('age', formGroup, true),
-      ).toBeUndefined();
+      expect(findControlInConfig('age', formGroup, true)).toBeUndefined();
     });
   });
   describe('type narrowing fns', () => {
@@ -84,8 +82,8 @@ describe('utils', () => {
       expect(isFormArrayConfig(formGroupConfig)).toBeFalse();
       expect(isFormGroupConfig(formGroupConfig)).toBeTrue();
 
-      expect(isValidatorKeyWithFnArgument('min')).toBeTrue();
-      expect(isValidatorKeyWithFnArgument('nullValidator')).toBeFalse();
+      expect(isValidatorKeyWithWrapperFn('min')).toBeTrue();
+      expect(isValidatorKeyWithWrapperFn('nullValidator')).toBeFalse();
     });
   });
 });
