@@ -2,14 +2,17 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 import { CrossControlDependency } from '../types';
 import { findControlInFormGroup } from '../utils';
 
-type GConstructor<T = object> = new (...args: any[]) => T;
-type GAbstractControl<T = any> = GConstructor<AbstractControl<T>>;
+type AbstractConstructor<T> = abstract new (...args: any[]) => T;
 
-export function manager<TControl extends GAbstractControl<U>, U = any>(
-  Control: TControl,
-) {
-  //@ts-expect-error non implemented abstract methods
-  return class extends Control<U> {
+type AbstractControlConstructor<T = any> = AbstractConstructor<
+  AbstractControl<T>
+>;
+
+export function managerControl<
+  T extends AbstractControlConstructor<U>,
+  U = any,
+>(Control: T): T & AbstractControlConstructor<U> {
+  abstract class ManagerControl extends Control {
     private _dependentControls: Map<
       CrossControlDependency,
       AbstractControl
@@ -34,5 +37,7 @@ export function manager<TControl extends GAbstractControl<U>, U = any>(
     clearDependentControls(): void {
       this._dependentControls = null;
     }
-  };
+  }
+
+  return ManagerControl;
 }

@@ -4,9 +4,9 @@ export type CopyDependencyMode = 'copy';
 
 export type ValueFromDependencyMode = 'valueFrom' | 'valueFromInvert';
 
-interface ValueFromDependencyModeData {
-  fromObject: object;
-}
+// interface ValueFromDependencyModeData {
+//   fromObject: object;
+// }
 
 export type BooleanDependencyMode = 'boolean' | 'booleanInvert';
 

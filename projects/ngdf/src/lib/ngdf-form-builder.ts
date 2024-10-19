@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { ngdfFormArray } from './model/ngdf-form-array';
+import { ngdfFormControl } from './model/ngdf-form-control';
+import { ngdfFormGroup } from './model/ngdf-form-group';
 import {
   NgdfControlConfig,
   NgdfFormArrayConfig,
@@ -45,13 +45,13 @@ export class NgdfFormBuilder {
   buildGroup(
     config: NgdfFormGroupConfig,
     validators?: ValidatorFn[],
-  ): FormGroup {
+  ): ReturnType<typeof ngdfFormGroup> {
     // only root config case
     if (!validators) {
       validators = this.resolveValidators(config.validators);
     }
 
-    const formGroup = new FormGroup({}, validators);
+    const formGroup = ngdfFormGroup({}, validators);
     for (const [name, control] of Object.entries(config.controls)) {
       const nestedControlvalidators = this.resolveValidators(
         control.validators,
@@ -72,8 +72,8 @@ export class NgdfFormBuilder {
   buildFormArray(
     arrayConfig: NgdfFormArrayConfig,
     validators?: ValidatorFn[],
-  ): FormArray {
-    return new FormArray(
+  ): ReturnType<typeof ngdfFormArray> {
+    return ngdfFormArray(
       arrayConfig.controls.map((control) => this.buildControl(control)),
       validators,
     );
@@ -86,9 +86,9 @@ export class NgdfFormBuilder {
   buildControl<T>(
     controlConfig: NgdfFormControlConfig<T>,
     validators?: ValidatorFn[],
-  ): FormControl {
+  ): ReturnType<typeof ngdfFormControl> {
     const { value, disabled } = controlConfig;
-    return new FormControl<T>(
+    return ngdfFormControl<T>(
       { value, disabled: !!disabled },
       validators ?? this.resolveValidators(controlConfig.validators),
     );
