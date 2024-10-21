@@ -1,6 +1,11 @@
 import { AbstractControl, FormArray } from '@angular/forms';
 import { ControlWithDependencies } from '../types';
-import { NgdfFormArray } from './manageable-control';
+import { withDependentControls } from './with-dependent-controls';
+
+/**
+ * FormArray with dependent controls
+ */
+const NgdfFormArray = withDependentControls(FormArray);
 
 /**
  *

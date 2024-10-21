@@ -1,6 +1,11 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { ControlWithDependencies } from '../types';
-import { NgdfFormGroup } from './manageable-control';
+import { withDependentControls } from './with-dependent-controls';
+
+/**
+ * FormGroup with dependent controls
+ */
+const NgdfFormGroup = withDependentControls(FormGroup);
 
 /**
  *

@@ -1,6 +1,11 @@
 import { FormControl } from '@angular/forms';
 import { ControlWithDependencies } from '../types';
-import { NgdfFormControl } from './manageable-control';
+import { withDependentControls } from './with-dependent-controls';
+
+/**
+ * FormControl with dependent controls
+ */
+const NgdfFormControl = withDependentControls(FormControl);
 
 /**
  *

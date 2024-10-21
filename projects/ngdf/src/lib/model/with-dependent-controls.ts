@@ -1,9 +1,4 @@
-import {
-  AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
-} from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { CrossControlDependency } from '../types';
 import { findControlInFormGroup } from '../utils';
 
@@ -41,18 +36,3 @@ export function withDependentControls<TBase extends Constructor>(Base: TBase) {
     }
   };
 }
-
-/**
- * FormControl with dependent controls
- */
-export const NgdfFormControl = withDependentControls(FormControl);
-
-/**
- * FormArray with dependent controls
- */
-export const NgdfFormArray = withDependentControls(FormArray);
-
-/**
- * FormGroup with dependent controls
- */
-export const NgdfFormGroup = withDependentControls(FormGroup);
