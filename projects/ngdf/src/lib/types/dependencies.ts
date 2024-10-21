@@ -1,3 +1,4 @@
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { NgdfFormControlConfig, ValidatorKey } from './config';
 
 export type CopyDependencyMode = 'copy';
@@ -73,3 +74,14 @@ export type ValueConverterFn = <T extends DependencyMode, U = unknown>(
     : T extends 'toEmptyString'
       ? string
       : boolean;
+
+export interface WithDependentControls {
+  setDependentControls(
+    formGroup: FormGroup,
+    dependencies: CrossControlDependency[],
+  ): void;
+  clearDependentControls(): void;
+}
+
+export type ControlWithDependencies<T extends AbstractControl> = T &
+  WithDependentControls;

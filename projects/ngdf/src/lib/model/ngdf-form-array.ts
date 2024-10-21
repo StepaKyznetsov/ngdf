@@ -1,5 +1,6 @@
 import { AbstractControl, FormArray } from '@angular/forms';
-import { managerControl } from './manager-control';
+import { ControlWithDependencies } from '../types';
+import { NgdfFormArray } from './manageable-control';
 
 /**
  *
@@ -7,6 +8,8 @@ import { managerControl } from './manager-control';
  */
 export function ngdfFormArray<
   T extends AbstractControl<any> = AbstractControl<any>,
->(...constructorParameters: ConstructorParameters<typeof FormArray<T>>) {
-  return new (managerControl(FormArray<T>))(...constructorParameters);
+>(
+  ...constructorParameters: ConstructorParameters<typeof FormArray<T>>
+): ControlWithDependencies<FormArray<T>> {
+  return new NgdfFormArray(...constructorParameters);
 }

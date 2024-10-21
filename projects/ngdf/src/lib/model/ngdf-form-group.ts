@@ -1,5 +1,6 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { managerControl } from './manager-control';
+import { ControlWithDependencies } from '../types';
+import { NgdfFormGroup } from './manageable-control';
 
 /**
  *
@@ -9,6 +10,8 @@ export function ngdfFormGroup<
   T extends {
     [K in keyof T]: AbstractControl<any>;
   } = any,
->(...constructorParameters: ConstructorParameters<typeof FormGroup<T>>) {
-  return new (managerControl(FormGroup<T>))(...constructorParameters);
+>(
+  ...constructorParameters: ConstructorParameters<typeof FormGroup<T>>
+): ControlWithDependencies<FormGroup<T>> {
+  return new NgdfFormGroup<T>(...constructorParameters);
 }

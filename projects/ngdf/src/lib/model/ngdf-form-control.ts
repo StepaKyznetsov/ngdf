@@ -1,5 +1,6 @@
 import { FormControl } from '@angular/forms';
-import { managerControl } from './manager-control';
+import { ControlWithDependencies } from '../types';
+import { NgdfFormControl } from './manageable-control';
 
 /**
  *
@@ -7,6 +8,6 @@ import { managerControl } from './manager-control';
  */
 export function ngdfFormControl<T = any>(
   ...constructorParameters: ConstructorParameters<typeof FormControl<T>>
-) {
-  return new (managerControl(FormControl<T>))(...constructorParameters);
+): ControlWithDependencies<FormControl<T | null>> {
+  return new NgdfFormControl(...constructorParameters);
 }

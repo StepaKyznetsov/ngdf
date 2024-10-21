@@ -1,18 +1,20 @@
-import { AbstractControl, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+} from '@angular/forms';
 import { CrossControlDependency } from '../types';
 import { findControlInFormGroup } from '../utils';
 
-type AbstractConstructor<T> = abstract new (...args: any[]) => T;
+type Constructor<T = any> = new (...args: any[]) => T;
 
-type AbstractControlConstructor<T = any> = AbstractConstructor<
-  AbstractControl<T>
->;
-
-export function managerControl<
-  T extends AbstractControlConstructor<U>,
-  U = any,
->(Control: T): T & AbstractControlConstructor<U> {
-  abstract class ManagerControl extends Control {
+/**
+ * Mixin for adding functionality related to dependent controls
+ * @param Base base class
+ */
+export function withDependentControls<TBase extends Constructor>(Base: TBase) {
+  return class extends Base {
     private _dependentControls: Map<
       CrossControlDependency,
       AbstractControl
@@ -37,7 +39,20 @@ export function managerControl<
     clearDependentControls(): void {
       this._dependentControls = null;
     }
-  }
-
-  return ManagerControl;
+  };
 }
+
+/**
+ * FormControl with dependent controls
+ */
+export const NgdfFormControl = withDependentControls(FormControl);
+
+/**
+ * FormArray with dependent controls
+ */
+export const NgdfFormArray = withDependentControls(FormArray);
+
+/**
+ * FormGroup with dependent controls
+ */
+export const NgdfFormGroup = withDependentControls(FormGroup);
