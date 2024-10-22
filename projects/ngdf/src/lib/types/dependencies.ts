@@ -75,7 +75,7 @@ export type ValueConverterFn = <T extends DependencyMode, U = unknown>(
       ? string
       : boolean;
 
-export interface WithDependentControls {
+export interface WithDependencies {
   setDependentControls(
     formGroup: FormGroup,
     dependencies: CrossControlDependency[],
@@ -84,4 +84,4 @@ export interface WithDependentControls {
 }
 
 export type ControlWithDependencies<T extends AbstractControl> = T &
-  WithDependentControls;
+  WithDependencies;

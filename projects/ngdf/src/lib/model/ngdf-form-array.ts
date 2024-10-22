@@ -1,18 +1,18 @@
 import { AbstractControl, FormArray } from '@angular/forms';
 import { ControlWithDependencies } from '../types';
-import { withDependentControls } from './with-dependent-controls';
+import { withDependencies } from './with-dependencies';
 
 /**
  * FormArray with dependent controls
  */
-const NgdfFormArray = withDependentControls(FormArray);
+const NgdfFormArray = withDependencies(FormArray);
 
 /**
  *
  * @see {@link FormArray}
  */
 export function ngdfFormArray<
-  T extends AbstractControl<any> = AbstractControl<any>,
+  T extends ControlWithDependencies<AbstractControl> = any,
 >(
   ...constructorParameters: ConstructorParameters<typeof FormArray<T>>
 ): ControlWithDependencies<FormArray<T>> {

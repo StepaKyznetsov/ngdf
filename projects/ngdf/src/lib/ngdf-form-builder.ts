@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
   AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
@@ -9,6 +12,7 @@ import { ngdfFormArray } from './model/ngdf-form-array';
 import { ngdfFormControl } from './model/ngdf-form-control';
 import { ngdfFormGroup } from './model/ngdf-form-group';
 import {
+  ControlWithDependencies,
   NgdfControlConfig,
   NgdfFormArrayConfig,
   NgdfFormControlConfig,
@@ -40,18 +44,22 @@ import {
 export class NgdfFormBuilder {
   /**
    * Angular {@link FormGroup} creating from {@link DynamicFormConfig}
-   * @param config lib's FormGroup config
+   * @param config NgdfFormGroup config
    */
-  buildGroup(
+  buildGroup<
+    T extends {
+      [K in keyof T]: ControlWithDependencies<AbstractControl>;
+    } = any,
+  >(
     config: NgdfFormGroupConfig,
     validators?: ValidatorFn[],
-  ): ReturnType<typeof ngdfFormGroup> {
+  ): ControlWithDependencies<FormGroup<T>> {
     // only root config case
     if (!validators) {
       validators = this.resolveValidators(config.validators);
     }
 
-    const formGroup = ngdfFormGroup({}, validators);
+    const formGroup = ngdfFormGroup<T>({} as T, validators);
     for (const [name, control] of Object.entries(config.controls)) {
       const nestedControlvalidators = this.resolveValidators(
         control.validators,
@@ -67,29 +75,35 @@ export class NgdfFormBuilder {
 
   /**
    * Angular {@link FormArray} creating from {@link DynamicArrayControlConfig}
-   * @param arrayConfig lib's FormArray config
+   * 
+   * TODO: fix typing
+   * 
+   * @param arrayConfig NgdfFormArray config
    */
-  buildFormArray(
+  buildFormArray<T extends ControlWithDependencies<AbstractControl> = any>(
     arrayConfig: NgdfFormArrayConfig,
     validators?: ValidatorFn[],
-  ): ReturnType<typeof ngdfFormArray> {
-    return ngdfFormArray(
-      arrayConfig.controls.map((control) => this.buildControl(control)),
+  ): ControlWithDependencies<FormArray<T>> {
+    return ngdfFormArray<T>(
+      arrayConfig.controls.map((control) => {
+        const validators = this.resolveValidators(control.validators);
+        return this.generateControl(control, validators);
+      }) as T[],
       validators,
     );
   }
 
   /**
    * Angular {@link FormControl} creating from {@link DynamicControlConfig}
-   * @param controlConfig lib's DynamicControlConfig config
+   * @param controlConfig NgdfFormControl config
    */
-  buildControl<T>(
+  buildControl<T = any>(
     controlConfig: NgdfFormControlConfig<T>,
     validators?: ValidatorFn[],
-  ): ReturnType<typeof ngdfFormControl> {
+  ): ControlWithDependencies<FormControl<T>> {
     const { value, disabled } = controlConfig;
     return ngdfFormControl<T>(
-      { value, disabled: !!disabled },
+      { value: value, disabled: !!disabled },
       validators ?? this.resolveValidators(controlConfig.validators),
     );
   }
@@ -97,7 +111,7 @@ export class NgdfFormBuilder {
   private generateControl(
     config: NgdfControlConfig,
     validators: ValidatorFn[],
-  ): AbstractControl {
+  ): ControlWithDependencies<AbstractControl> {
     if (isFormGroupConfig(config)) {
       return this.buildGroup(config, validators);
     } else if (isFormArrayConfig(config)) {

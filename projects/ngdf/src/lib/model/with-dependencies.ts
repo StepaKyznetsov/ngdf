@@ -8,7 +8,7 @@ type Constructor<T = any> = new (...args: any[]) => T;
  * Mixin for adding functionality related to dependent controls
  * @param Base base class
  */
-export function withDependentControls<TBase extends Constructor>(Base: TBase) {
+export function withDependencies<TBase extends Constructor>(Base: TBase) {
   return class extends Base {
     private _dependentControls: Map<
       CrossControlDependency,
@@ -29,6 +29,10 @@ export function withDependentControls<TBase extends Constructor>(Base: TBase) {
           this._dependentControls!.set(dependency, control);
         }
       });
+    }
+
+    getDependentControls(): typeof this._dependentControls {
+      return this._dependentControls;
     }
 
     clearDependentControls(): void {

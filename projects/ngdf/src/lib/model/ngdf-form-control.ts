@@ -1,11 +1,11 @@
 import { FormControl } from '@angular/forms';
 import { ControlWithDependencies } from '../types';
-import { withDependentControls } from './with-dependent-controls';
+import { withDependencies } from './with-dependencies';
 
 /**
  * FormControl with dependent controls
  */
-const NgdfFormControl = withDependentControls(FormControl);
+const NgdfFormControl = withDependencies(FormControl<any>);
 
 /**
  *
@@ -13,6 +13,6 @@ const NgdfFormControl = withDependentControls(FormControl);
  */
 export function ngdfFormControl<T = any>(
   ...constructorParameters: ConstructorParameters<typeof FormControl<T>>
-): ControlWithDependencies<FormControl<T | null>> {
+): ControlWithDependencies<FormControl<T>> {
   return new NgdfFormControl(...constructorParameters);
 }

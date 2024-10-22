@@ -117,7 +117,7 @@ export interface CompositeControl<T extends object>
  *
  * Based on {@link CompositeControl}
  */
-export type NgdfFormArrayConfig = CompositeControl<NgdfFormControlConfig[]>;
+export type NgdfFormArrayConfig = CompositeControl<NgdfControlConfig[]>;
 
 /**
  * Default form config
