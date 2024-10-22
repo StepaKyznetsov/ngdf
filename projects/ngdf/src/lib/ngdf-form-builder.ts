@@ -27,9 +27,9 @@ import {
   isDefined,
   isFormArrayConfig,
   isFormGroupConfig,
+  isNonNullable,
   isObject,
   isRegExp,
-  isTruthy,
   isValidatorKeyWithWrapperFn,
 } from './utils';
 
@@ -75,9 +75,9 @@ export class NgdfFormBuilder {
 
   /**
    * Angular {@link FormArray} creating from {@link DynamicArrayControlConfig}
-   * 
-   * TODO: fix typing
-   * 
+   *
+   * @todo fix typing
+   *
    * @param arrayConfig NgdfFormArray config
    */
   buildFormArray<T extends ControlWithDependencies<AbstractControl> = any>(
@@ -158,7 +158,7 @@ export class NgdfFormBuilder {
 
         return validatorFn;
       })
-      .filter(isTruthy);
+      .filter(isNonNullable);
   }
 
   /**

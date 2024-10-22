@@ -1,4 +1,5 @@
 import { ValidatorFn, Validators } from '@angular/forms';
+import { CrossControlDependency } from './dependencies';
 
 type NgdfCompositeType = 'group' | 'array';
 
@@ -79,6 +80,7 @@ export interface NgdfAbstractControlConfig {
   validators?: NgdfValidators;
   // asyncValidators?: NgdfAsyncValidators;
   type: NgdfControlType;
+  dependentControls?: CrossControlDependency;
 }
 
 /**

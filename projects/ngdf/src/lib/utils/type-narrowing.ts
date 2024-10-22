@@ -3,7 +3,6 @@ import {
   NgdfFormArrayConfig,
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
-  Truthy,
   ValidatorKey,
   ValidatorKeyWithWrapperFn,
 } from '../types';
@@ -70,7 +69,8 @@ export const isBoolean = (value: unknown): value is boolean =>
 /**
  * Whether the value is of type {@link Truthy}
  */
-export const isTruthy = <T>(x: T): x is Truthy<T> => Boolean(x);
+export const isNonNullable = <T>(x: T): x is NonNullable<T> =>
+  x !== null && x !== undefined;
 
 /**
  * Whether the value is of type {@link NonNullable}

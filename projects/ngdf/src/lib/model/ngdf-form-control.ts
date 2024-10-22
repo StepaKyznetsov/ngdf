@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { ControlWithDependencies } from '../types';
-import { withDependencies } from './with-dependencies';
+import { withDependencies } from '../utils';
 
 /**
  * FormControl with dependent controls

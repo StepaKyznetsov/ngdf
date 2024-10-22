@@ -1,16 +1,18 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { CrossControlDependency } from '../types';
-import { findControlInFormGroup } from '../utils';
+import { findControlInFormGroup } from './find-control';
 
 type Constructor<T = any> = new (...args: any[]) => T;
 
 /**
  * Mixin for adding functionality related to dependent controls
+ * 
+ * May be used in the future not only for controls
  * @param Base base class
  */
 export function withDependencies<TBase extends Constructor>(Base: TBase) {
   return class extends Base {
-    private _dependentControls: Map<
+    _dependentControls: Map<
       CrossControlDependency,
       AbstractControl
     > | null = null;
