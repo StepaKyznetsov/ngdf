@@ -1,5 +1,5 @@
 import {
-  NgdfControlConfig,
+  NgdfAbstractControlConfig,
   NgdfFormArrayConfig,
   NgdfFormControlConfig,
   NgdfFormGroupConfig,
@@ -11,14 +11,14 @@ import {
  * Whether the value is of type NgdfFormControlConfig
  */
 export const isFormControlConfig = (
-  config: NgdfControlConfig,
+  config: NgdfAbstractControlConfig,
 ): config is NgdfFormControlConfig => !('controls' in config);
 
 /**
  * Whether the value is of type NgdfFormArrayConfig
  */
 export const isFormArrayConfig = (
-  config: NgdfControlConfig,
+  config: NgdfAbstractControlConfig,
 ): config is NgdfFormArrayConfig =>
   'controls' in config && Array.isArray(config.controls);
 
@@ -26,7 +26,7 @@ export const isFormArrayConfig = (
  * Whether the value is of type NgdfFormGroupConfig
  */
 export const isFormGroupConfig = (
-  config: NgdfControlConfig,
+  config: NgdfAbstractControlConfig,
 ): config is NgdfFormGroupConfig =>
   'controls' in config && !Array.isArray(config.controls);
 

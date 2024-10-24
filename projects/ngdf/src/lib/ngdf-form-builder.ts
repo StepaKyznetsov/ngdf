@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
@@ -12,10 +9,13 @@ import { ngdfFormArray } from './model/ngdf-form-array';
 import { ngdfFormControl } from './model/ngdf-form-control';
 import { ngdfFormGroup } from './model/ngdf-form-group';
 import {
-  ControlWithDependencies,
-  NgdfControlConfig,
+  NgdfAbstractControl,
+  NgdfControl,
+  NgdfFormArray,
   NgdfFormArrayConfig,
+  NgdfFormControl,
   NgdfFormControlConfig,
+  NgdfFormGroup,
   NgdfFormGroupConfig,
   NgdfValidators,
   NgdfValidatorValue,
@@ -26,6 +26,7 @@ import {
   isBoolean,
   isDefined,
   isFormArrayConfig,
+  isFormControlConfig,
   isFormGroupConfig,
   isNonNullable,
   isObject,
@@ -48,16 +49,11 @@ export class NgdfFormBuilder {
    */
   buildGroup<
     T extends {
-      [K in keyof T]: ControlWithDependencies<AbstractControl>;
+      [K in keyof T]: NgdfAbstractControl;
     } = any,
-  >(
-    config: NgdfFormGroupConfig,
-    validators?: ValidatorFn[],
-  ): ControlWithDependencies<FormGroup<T>> {
+  >(config: NgdfFormGroupConfig, validators?: ValidatorFn[]): NgdfFormGroup<T> {
     // only root config case
-    if (!validators) {
-      validators = this.resolveValidators(config.validators);
-    }
+    validators ??= this.resolveValidators(config.validators);
 
     const formGroup = ngdfFormGroup<T>({} as T, validators);
     for (const [name, control] of Object.entries(config.controls)) {
@@ -66,7 +62,7 @@ export class NgdfFormBuilder {
       );
       formGroup.addControl(
         name,
-        this.generateControl(control, nestedControlvalidators),
+        this.generateControl(control, nestedControlvalidators)!,
       );
     }
 
@@ -76,19 +72,20 @@ export class NgdfFormBuilder {
   /**
    * Angular {@link FormArray} creating from {@link DynamicArrayControlConfig}
    *
-   * @todo fix typing
-   *
    * @param arrayConfig NgdfFormArray config
    */
-  buildFormArray<T extends ControlWithDependencies<AbstractControl> = any>(
-    arrayConfig: NgdfFormArrayConfig,
-    validators?: ValidatorFn[],
-  ): ControlWithDependencies<FormArray<T>> {
-    return ngdfFormArray<T>(
+  buildFormArray<
+    T extends NgdfControl = any,
+    U extends NgdfAbstractControl = any,
+  >(
+    arrayConfig: NgdfFormArrayConfig<T>,
+    validators: ValidatorFn[] = [],
+  ): NgdfFormArray<U> {
+    return ngdfFormArray<U>(
       arrayConfig.controls.map((control) => {
         const validators = this.resolveValidators(control.validators);
-        return this.generateControl(control, validators);
-      }) as T[],
+        return this.generateControl<T, U>(control, validators)!;
+      }),
       validators,
     );
   }
@@ -99,26 +96,36 @@ export class NgdfFormBuilder {
    */
   buildControl<T = any>(
     controlConfig: NgdfFormControlConfig<T>,
-    validators?: ValidatorFn[],
-  ): ControlWithDependencies<FormControl<T>> {
+    validators: ValidatorFn[] = [],
+  ): NgdfFormControl<T> {
     const { value, disabled } = controlConfig;
     return ngdfFormControl<T>(
       { value: value, disabled: !!disabled },
-      validators ?? this.resolveValidators(controlConfig.validators),
+      validators,
     );
   }
 
-  private generateControl(
-    config: NgdfControlConfig,
-    validators: ValidatorFn[],
-  ): ControlWithDependencies<AbstractControl> {
+  /**
+   *
+   * @todo fix typing
+   *
+   * @param config
+   * @param validators
+   * @returns
+   */
+  private generateControl<
+    T extends NgdfControl = any,
+    U extends NgdfAbstractControl = any,
+  >(config: T, validators: ValidatorFn[] = []): U | undefined {
     if (isFormGroupConfig(config)) {
-      return this.buildGroup(config, validators);
+      return this.buildGroup(config, validators) as unknown as U;
     } else if (isFormArrayConfig(config)) {
-      return this.buildFormArray(config, validators);
+      return this.buildFormArray(config, validators) as unknown as U;
+    } else if (isFormControlConfig(config)) {
+      return this.buildControl(config, validators) as unknown as U;
     }
 
-    return this.buildControl(config, validators);
+    return;
   }
 
   /**

@@ -1,10 +1,9 @@
 import {
-  NgdfControlConfig,
   NgdfFormArrayConfig,
+  NgdfFormControlConfig,
   NgdfFormGroupConfig,
 } from '../src/lib/types/config';
 import {
-  findControlInConfig,
   isFormArrayConfig,
   isFormControlConfig,
   isFormGroupConfig,
@@ -12,50 +11,50 @@ import {
 } from '../src/lib/utils';
 
 describe('utils', () => {
-  describe('[findControlInFormGroupConfig]', () => {
-    it('returns control config in flat and nested structure, undefined otherwise', () => {
-      const formGroup: NgdfFormGroupConfig = {
-        type: 'group',
-        controls: {
-          email: {
-            type: 'text',
-            value: '',
-            validators: {
-              email: true,
-            },
-          },
-          password: {
-            type: 'password',
-            value: '',
-          },
-          nestedGroup: {
-            type: 'group',
-            controls: {
-              login: {
-                type: 'text',
-                value: '123',
-              },
-            },
-          },
-        },
-      };
+  // describe('[findControlInFormGroupConfig]', () => {
+  //   it('returns control config in flat and nested structure, undefined otherwise', () => {
+  //     const formGroup: NgdfFormGroupConfig = {
+  //       type: 'group',
+  //       controls: {
+  //         email: {
+  //           type: 'text',
+  //           value: '',
+  //           validators: {
+  //             email: true,
+  //           },
+  //         },
+  //         password: {
+  //           type: 'password',
+  //           value: '',
+  //         },
+  //         nestedGroup: {
+  //           type: 'group',
+  //           controls: {
+  //             login: {
+  //               type: 'text',
+  //               value: '123',
+  //             },
+  //           },
+  //         },
+  //       },
+  //     };
 
-      expect(findControlInConfig('password', formGroup)).toEqual({
-        type: 'password',
-        value: '',
-      });
+  //     expect(findControlInConfig('password', formGroup)).toEqual({
+  //       type: 'password',
+  //       value: '',
+  //     });
 
-      expect(findControlInConfig('login', formGroup, true)).toEqual({
-        type: 'text',
-        value: '123',
-      });
+  //     expect(findControlInConfig('login', formGroup, true)).toEqual({
+  //       type: 'text',
+  //       value: '123',
+  //     });
 
-      expect(findControlInConfig('age', formGroup, true)).toBeUndefined();
-    });
-  });
+  //     expect(findControlInConfig('age', formGroup, true)).toBeUndefined();
+  //   });
+  // });
   describe('type narrowing fns', () => {
     it('returns correct narrow type with similar data types', () => {
-      const formControlConfig: NgdfControlConfig = {
+      const formControlConfig: NgdfFormControlConfig = {
         type: 'text',
         value: '',
       };

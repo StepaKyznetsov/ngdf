@@ -1,34 +1,12 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { NgdfControlConfig, NgdfFormGroupConfig } from '../types';
-import { isFormGroupConfig } from './type-narrowing';
 
 /**
- * Find control in form group config
+ * Find control in form group
  *
  * @param key control key
  * @param formGroup the parent group from which the search begins
  * @param recursive need for recursive search in all nested groups including the parent group
  */
-export const findControlInConfig = (
-  key: string,
-  formGroup: NgdfFormGroupConfig,
-): NgdfControlConfig | undefined => {
-  const control = formGroup.controls[key];
-
-  if (!control) {
-    for (const controlItem of Object.values(formGroup.controls)) {
-      if (isFormGroupConfig(controlItem)) {
-        const nestedControl = findControlInConfig(key, controlItem);
-        if (nestedControl) {
-          return nestedControl;
-        }
-      }
-    }
-  }
-
-  return control;
-};
-
 export const findControlInFormGroup = (
   key: string,
   formGroup: FormGroup,

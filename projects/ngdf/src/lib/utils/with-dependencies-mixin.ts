@@ -6,16 +6,14 @@ type Constructor<T = any> = new (...args: any[]) => T;
 
 /**
  * Mixin for adding functionality related to dependent controls
- * 
+ *
  * May be used in the future not only for controls
  * @param Base base class
  */
 export function withDependencies<TBase extends Constructor>(Base: TBase) {
   return class extends Base {
-    _dependentControls: Map<
-      CrossControlDependency,
-      AbstractControl
-    > | null = null;
+    _dependentControls: Map<CrossControlDependency, AbstractControl> | null =
+      null;
 
     setDependentControls(
       formGroup: FormGroup,
