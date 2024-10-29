@@ -67,13 +67,7 @@ export const isBoolean = (value: unknown): value is boolean =>
   typeof value === 'boolean';
 
 /**
- * Whether the value is of type {@link Truthy}
- */
-export const isNonNullable = <T>(x: T): x is NonNullable<T> =>
-  x !== null && x !== undefined;
-
-/**
  * Whether the value is of type {@link NonNullable}
  */
-export const isDefined = <T>(value: T): value is NonNullable<T> =>
-  value !== undefined && value !== null;
+export const isNonNullable = <T>(value: T): value is NonNullable<T> =>
+  value !== null && value !== undefined;

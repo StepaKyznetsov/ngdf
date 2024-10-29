@@ -10,7 +10,7 @@ type Constructor<T = any> = new (...args: any[]) => T;
  * May be used in the future not only for controls
  * @param Base base class
  */
-export function withDependencies<TBase extends Constructor>(Base: TBase) {
+export function withDependencies<T extends Constructor>(Base: T) {
   return class extends Base {
     _dependentControls: Map<CrossControlDependency, AbstractControl> | null =
       null;

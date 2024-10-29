@@ -3,7 +3,7 @@ import {
   AbstractControl,
   ValidationErrors,
   ValidatorFn,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { ngdfFormArray } from './model/ngdf-form-array';
 import { ngdfFormControl } from './model/ngdf-form-control';
@@ -24,7 +24,6 @@ import {
 } from './types';
 import {
   isBoolean,
-  isDefined,
   isFormArrayConfig,
   isFormControlConfig,
   isFormGroupConfig,
@@ -47,7 +46,7 @@ export class NgdfFormBuilder {
    * Angular {@link FormGroup} creating from {@link DynamicFormConfig}
    * @param config NgdfFormGroup config
    */
-  buildGroup<
+  group<
     T extends {
       [K in keyof T]: NgdfAbstractControl;
     } = any,
@@ -62,7 +61,7 @@ export class NgdfFormBuilder {
       );
       formGroup.addControl(
         name,
-        this.generateControl(control, nestedControlvalidators)!,
+        this.buildControl(control, nestedControlvalidators)!,
       );
     }
 
@@ -74,7 +73,7 @@ export class NgdfFormBuilder {
    *
    * @param arrayConfig NgdfFormArray config
    */
-  buildFormArray<
+  formArray<
     T extends NgdfControl = any,
     U extends NgdfAbstractControl = any,
   >(
@@ -84,7 +83,7 @@ export class NgdfFormBuilder {
     return ngdfFormArray<U>(
       arrayConfig.controls.map((control) => {
         const validators = this.resolveValidators(control.validators);
-        return this.generateControl<T, U>(control, validators)!;
+        return this.buildControl<T, U>(control, validators)!;
       }),
       validators,
     );
@@ -94,7 +93,7 @@ export class NgdfFormBuilder {
    * Angular {@link FormControl} creating from {@link DynamicControlConfig}
    * @param controlConfig NgdfFormControl config
    */
-  buildControl<T = any>(
+  control<T = any>(
     controlConfig: NgdfFormControlConfig<T>,
     validators: ValidatorFn[] = [],
   ): NgdfFormControl<T> {
@@ -107,22 +106,21 @@ export class NgdfFormBuilder {
 
   /**
    *
-   * @todo fix typing
+   * @FIXME typing
    *
    * @param config
    * @param validators
-   * @returns
    */
-  private generateControl<
+  private buildControl<
     T extends NgdfControl = any,
     U extends NgdfAbstractControl = any,
   >(config: T, validators: ValidatorFn[] = []): U | undefined {
     if (isFormGroupConfig(config)) {
-      return this.buildGroup(config, validators) as unknown as U;
+      return this.group(config, validators) as unknown as U;
     } else if (isFormArrayConfig(config)) {
-      return this.buildFormArray(config, validators) as unknown as U;
+      return this.formArray(config, validators) as unknown as U;
     } else if (isFormControlConfig(config)) {
-      return this.buildControl(config, validators) as unknown as U;
+      return this.control(config, validators) as unknown as U;
     }
 
     return;
@@ -157,7 +155,7 @@ export class NgdfFormBuilder {
         ) {
           return (control: AbstractControl): ValidationErrors | null => {
             const { errorText } = validatorBody;
-            const error: ValidationErrors | null = validatorFn(control);
+            const error = validatorFn(control);
 
             return error ? { [key]: errorText } : null;
           };
@@ -191,7 +189,6 @@ export class NgdfFormBuilder {
    *
    * @param key validator key
    * @param validatorBody validator body
-   * @returns
    */
   private createValidatorFn(
     key: ValidatorKey,
@@ -202,7 +199,7 @@ export class NgdfFormBuilder {
     if (isObject(validatorBody) && !isRegExp(validatorBody)) {
       if (
         withWrapperArgument &&
-        isDefined(validatorBody.value) &&
+        isNonNullable(validatorBody.value) &&
         !isBoolean(validatorBody.value)
       ) {
         return (Validators[key] as ValidatorWrapperFn)(validatorBody.value);

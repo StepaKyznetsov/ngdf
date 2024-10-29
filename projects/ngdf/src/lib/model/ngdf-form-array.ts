@@ -1,11 +1,6 @@
 import { AbstractControl, FormArray } from '@angular/forms';
-import { ControlWithDependencies } from '../types';
+import { ControlWithDependencies, NgdfFormArray } from '../types';
 import { withDependencies } from '../utils';
-
-/**
- * FormArray with dependent controls
- */
-const NgdfFormArray = withDependencies(FormArray);
 
 /**
  *
@@ -15,6 +10,7 @@ export function ngdfFormArray<
   T extends ControlWithDependencies<AbstractControl> = any,
 >(
   ...constructorParameters: ConstructorParameters<typeof FormArray<T>>
-): ControlWithDependencies<FormArray<T>> {
-  return new NgdfFormArray(...constructorParameters);
+): NgdfFormArray<T> {
+  const formArray = withDependencies(FormArray);
+  return new formArray<T>(...constructorParameters);
 }

@@ -4,7 +4,7 @@ import { CrossControlDependency } from './dependencies';
 type NgdfCompositeType = 'group' | 'array';
 
 /**
- * A basic set that will be expanded over time
+ * Basic set of control types
  */
 export type NgdfControlType =
   | 'text'
@@ -36,7 +36,7 @@ export type ValidatorKey =
   | 'nullValidator';
 
 /**
- * Validator keys ...
+ * Validator keys that need arguments (e.g. min and max validators require a number value)
  */
 export type ValidatorKeyWithWrapperFn = Exclude<
   ValidatorKey,
@@ -45,6 +45,8 @@ export type ValidatorKeyWithWrapperFn = Exclude<
 
 /**
  * Argument types for Validators keys from {@link ValidatorKey}
+ * 
+ * If the validator does not require an argument, its value will be a boolean
  */
 export type ValidatorArgumentTypeByKey<T extends ValidatorKey> =
   T extends ValidatorKeyWithWrapperFn

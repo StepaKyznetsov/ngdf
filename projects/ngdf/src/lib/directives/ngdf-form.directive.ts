@@ -21,6 +21,6 @@ export class NgdfFormDirective extends FormGroupDirective {
 
   @Input()
   set ngdfForm(formConfig: NgdfFormGroupConfig) {
-    this.form = this.ngdfFormBuilder.buildGroup(formConfig);
+    this.form = this.ngdfFormBuilder.group(formConfig);
   }
 }
