@@ -52,7 +52,10 @@ export type DependencyMode =
 // }
 
 export type ChangeableProperty =
-  | Exclude<keyof NgdfFormControlConfig, 'validators' | 'type'>
+  | Exclude<
+      keyof NgdfFormControlConfig,
+      'validators' | 'type' | 'dependentControls'
+    >
   | ValidatorKey;
 
 export interface DependentControl {

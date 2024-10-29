@@ -45,7 +45,7 @@ export type ValidatorKeyWithWrapperFn = Exclude<
 
 /**
  * Argument types for Validators keys from {@link ValidatorKey}
- * 
+ *
  * If the validator does not require an argument, its value will be a boolean
  */
 export type ValidatorArgumentTypeByKey<T extends ValidatorKey> =
@@ -82,7 +82,7 @@ export interface NgdfAbstractControlConfig {
   validators?: NgdfValidators;
   // asyncValidators?: NgdfAsyncValidators;
   type: NgdfControlType;
-  dependentControls?: CrossControlDependency;
+  dependentControls?: CrossControlDependency[];
 }
 
 /**

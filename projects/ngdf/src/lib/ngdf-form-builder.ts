@@ -3,7 +3,7 @@ import {
   AbstractControl,
   ValidationErrors,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { ngdfFormArray } from './model/ngdf-form-array';
 import { ngdfFormControl } from './model/ngdf-form-control';
@@ -25,7 +25,6 @@ import {
 import {
   isBoolean,
   isFormArrayConfig,
-  isFormControlConfig,
   isFormGroupConfig,
   isNonNullable,
   isObject,
@@ -50,7 +49,10 @@ export class NgdfFormBuilder {
     T extends {
       [K in keyof T]: NgdfAbstractControl;
     } = any,
-  >(config: NgdfFormGroupConfig, validators?: ValidatorFn[]): NgdfFormGroup<T> {
+  >(
+    config: NgdfFormGroupConfig,
+    validators?: ValidatorFn[] | null,
+  ): NgdfFormGroup<T> {
     // only root config case
     validators ??= this.resolveValidators(config.validators);
 
@@ -73,12 +75,9 @@ export class NgdfFormBuilder {
    *
    * @param arrayConfig NgdfFormArray config
    */
-  formArray<
-    T extends NgdfControl = any,
-    U extends NgdfAbstractControl = any,
-  >(
+  formArray<T extends NgdfControl = any, U extends NgdfAbstractControl = any>(
     arrayConfig: NgdfFormArrayConfig<T>,
-    validators: ValidatorFn[] = [],
+    validators?: ValidatorFn[] | null,
   ): NgdfFormArray<U> {
     return ngdfFormArray<U>(
       arrayConfig.controls.map((control) => {
@@ -95,7 +94,7 @@ export class NgdfFormBuilder {
    */
   control<T = any>(
     controlConfig: NgdfFormControlConfig<T>,
-    validators: ValidatorFn[] = [],
+    validators?: ValidatorFn[] | null,
   ): NgdfFormControl<T> {
     const { value, disabled } = controlConfig;
     return ngdfFormControl<T>(
@@ -114,37 +113,25 @@ export class NgdfFormBuilder {
   private buildControl<
     T extends NgdfControl = any,
     U extends NgdfAbstractControl = any,
-  >(config: T, validators: ValidatorFn[] = []): U | undefined {
+  >(config: T, validators: ValidatorFn[] | null): U {
     if (isFormGroupConfig(config)) {
       return this.group(config, validators) as unknown as U;
     } else if (isFormArrayConfig(config)) {
       return this.formArray(config, validators) as unknown as U;
-    } else if (isFormControlConfig(config)) {
-      return this.control(config, validators) as unknown as U;
     }
 
-    return;
+    return this.control(config, validators) as unknown as U;
   }
 
   /**
    * Method to get an array of Angular control validators from the {@link DynamicControlValidators}
    * @param validators object with { key : value } validators structure
    */
-  resolveValidators(validators?: NgdfValidators): ValidatorFn[] {
+  resolveValidators(validators?: NgdfValidators): ValidatorFn[] | null {
     if (!validators) {
-      return [];
+      return null;
     }
 
-    return this.createValidatorsWithCustomData(validators);
-  }
-
-  /**
-   *
-   * @param validators
-   */
-  private createValidatorsWithCustomData(
-    validators: NgdfValidators,
-  ): ValidatorFn[] {
     return (Object.entries(validators) as [ValidatorKey, NgdfValidatorValue][])
       .map(([key, validatorBody]) => {
         const validatorFn = this.createValidatorFn(key, validatorBody);

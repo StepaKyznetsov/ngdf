@@ -17,7 +17,7 @@ describe('NgdfFormBuilder', () => {
   describe('[buildGroup]', () => {
     it('returns NgdfFormGroup with no controls', () => {
       const group = ngdfFormGroup({}, []);
-      const buildGroup = service.buildGroup({
+      const buildGroup = service.group({
         type: 'group',
         controls: {},
       });
@@ -35,7 +35,7 @@ describe('NgdfFormBuilder', () => {
         [],
       );
 
-      const buildGroup = service.buildGroup({
+      const buildGroup = service.group({
         type: 'group',
         controls: {
           a: {
