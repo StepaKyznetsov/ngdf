@@ -1,5 +1,7 @@
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, ControlEvent, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { NgdfFormControlConfig, ValidatorKey } from './config';
+import { NgdfAbstractControl } from './controls';
 
 export type CopyDependencyMode = 'copy';
 
@@ -110,5 +112,15 @@ export interface WithDependencies {
   clearDependentControls(): void;
 }
 
-export type ControlWithDependencies<T extends AbstractControl> = T &
-  WithDependencies;
+export interface WithEvents {
+  ngdfEvents: Observable<ControlEvent>;
+  hidden: boolean;
+  setHidden(
+    hidden: boolean,
+    opts?: { sourceControl?: NgdfAbstractControl },
+  ): void;
+}
+
+export type NgdfControl<T extends AbstractControl> = T &
+  WithDependencies &
+  WithEvents;

@@ -6,12 +6,12 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { NgdfBaseControl } from '../ngdf-base-control';
-import { ControlWithDependencies } from './dependencies';
+import { NgdfControl } from './dependencies';
 
 export type NgdfControlLoaderFn = () => Promise<Type<NgdfBaseControl>>;
 
 export type NgdfAbstractControl<T extends AbstractControl = AbstractControl> =
-  ControlWithDependencies<T>;
+  NgdfControl<T>;
 
 export type NgdfFormControl<T = any> = NgdfAbstractControl<FormControl<T>>;
 

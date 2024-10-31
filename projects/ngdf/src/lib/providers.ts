@@ -1,4 +1,5 @@
 import { InjectionToken, Provider } from '@angular/core';
+import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { NgdfControlLoaderFn, NgdfControlType } from './types';
 
 /**
@@ -26,3 +27,7 @@ export const provideNgdfDynamicControls = (
     useValue: controlMap,
   };
 };
+
+export const ngdfViewProviders = [
+  { provide: ControlContainer, useExisting: FormGroupDirective },
+];
