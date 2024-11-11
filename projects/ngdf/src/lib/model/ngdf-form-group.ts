@@ -1,6 +1,6 @@
-import { AbstractControl, FormGroup } from '@angular/forms';
-import { ControlWithDependencies, NgdfFormGroup } from '../types';
-import { withDependencies } from '../utils';
+import { FormGroup } from '@angular/forms';
+import { NgdfAbstractControl, NgdfFormGroup } from '../types';
+import { ngdfControl } from './ngdf-control';
 
 /**
  *
@@ -8,11 +8,11 @@ import { withDependencies } from '../utils';
  */
 export function ngdfFormGroup<
   T extends {
-    [K in keyof T]: ControlWithDependencies<AbstractControl>;
+    [K in keyof T]: NgdfAbstractControl;
   } = any,
 >(
   ...constructorParameters: ConstructorParameters<typeof FormGroup<T>>
 ): NgdfFormGroup<T> {
-  const formGroup = withDependencies(FormGroup);
-  return new formGroup<T>(...constructorParameters);
+  const formGroup = ngdfControl<T>(FormGroup);
+  return new formGroup(...constructorParameters);
 }

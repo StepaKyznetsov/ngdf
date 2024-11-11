@@ -121,9 +121,8 @@ export interface CompositeControl<T extends object>
  *
  * Based on {@link CompositeControl}
  */
-export type NgdfFormArrayConfig<T extends NgdfControl = any> = CompositeControl<
-  T[]
->;
+export type NgdfFormArrayConfig<T extends NgdfControlConfig = any> =
+  CompositeControl<T[]>;
 
 /**
  * Default form config
@@ -131,10 +130,10 @@ export type NgdfFormArrayConfig<T extends NgdfControl = any> = CompositeControl<
  * Based on {@link CompositeControl}
  */
 export type NgdfFormGroupConfig = CompositeControl<{
-  [key: string]: NgdfControl;
+  [key: string]: NgdfControlConfig;
 }>;
 
-export type NgdfControl =
+export type NgdfControlConfig =
   | NgdfFormGroupConfig
   | NgdfFormArrayConfig
   | NgdfFormControlConfig;

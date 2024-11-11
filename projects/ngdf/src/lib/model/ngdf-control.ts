@@ -19,6 +19,14 @@ import {
 } from '../types';
 import { findControlInFormGroup } from '../utils';
 
+type Constructor<T = any, U = any[]> = new (
+  ...args: U extends any[]
+    ? U
+    : U extends Constructor
+      ? ConstructorParameters<U>
+      : never
+) => T;
+
 /**
  * Event fired when the control's hidden changes.
  */
@@ -46,24 +54,29 @@ export class ValidatorsChangeEvent extends ControlEvent<
 }
 
 export function ngdfControl<T = any>(
-  BaseControl: new (...args: any[]) => FormControl<T>,
-): NgdfFormControl<T>;
+  BaseControl: Constructor<FormControl<T>>,
+): Constructor<NgdfFormControl<T>, typeof FormControl<T>>;
 
 export function ngdfControl<T extends NgdfAbstractControl = any>(
-  BaseControl: new (...args: any[]) => FormArray<T>,
-): NgdfFormArray<T>;
+  BaseControl: Constructor<FormArray<T>>,
+): Constructor<NgdfFormArray<T>, typeof FormArray<T>>;
 
-export function ngdfControl<T extends {
-  [K in keyof T]: NgdfAbstractControl;
-} = any>(
-  BaseControl: new (...args: any[]) => FormGroup<T>,
-): NgdfFormGroup<T>;
+export function ngdfControl<
+  T extends {
+    [K in keyof T]: NgdfAbstractControl;
+  } = any,
+>(
+  BaseControl: Constructor<FormGroup<T>>,
+): Constructor<NgdfFormGroup<T>, typeof FormGroup<T>>;
 
 export function ngdfControl<T extends AbstractControl>(
-  BaseControl: new (...args: any[]) => T,
-): NgdfAbstractControl {
+  BaseControl: Constructor<T>,
+): Constructor<NgdfAbstractControl, T> {
   //@ts-expect-error abstract methods already implemented
-  return class extends BaseControl implements WithDependencies, WithEvents {
+  return class NgdfControl
+    extends BaseControl
+    implements WithDependencies, WithEvents
+  {
     private readonly _ngdfEvents = new Subject<ControlEvent>();
     _dependentControls: Map<CrossControlDependency, AbstractControl> | null =
       null;

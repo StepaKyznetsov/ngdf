@@ -10,7 +10,7 @@ import { ngdfFormControl } from './model/ngdf-form-control';
 import { ngdfFormGroup } from './model/ngdf-form-group';
 import {
   NgdfAbstractControl,
-  NgdfControl,
+  NgdfControlConfig,
   NgdfFormArray,
   NgdfFormArrayConfig,
   NgdfFormControl,
@@ -75,7 +75,10 @@ export class NgdfFormBuilder {
    *
    * @param arrayConfig NgdfFormArray config
    */
-  formArray<T extends NgdfControl = any, U extends NgdfAbstractControl = any>(
+  formArray<
+    T extends NgdfControlConfig = any,
+    U extends NgdfAbstractControl = any,
+  >(
     arrayConfig: NgdfFormArrayConfig<T>,
     validators?: ValidatorFn[] | null,
   ): NgdfFormArray<U> {
@@ -111,7 +114,7 @@ export class NgdfFormBuilder {
    * @param validators
    */
   private buildControl<
-    T extends NgdfControl = any,
+    T extends NgdfControlConfig = any,
     U extends NgdfAbstractControl = any,
   >(config: T, validators: ValidatorFn[] | null): U {
     if (isFormGroupConfig(config)) {
