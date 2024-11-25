@@ -1,4 +1,4 @@
-import { ControlEvent, AbstractControl, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ControlEvent, ValidatorFn } from '@angular/forms';
 
 /**
  * Event fired when the control's hidden property changes.
@@ -19,7 +19,7 @@ export class ValidatorsChangeEvent extends ControlEvent<
   ValidatorFn | ValidatorFn[]
 > {
   constructor(
-    public readonly validators: ValidatorFn | ValidatorFn[],
+    public readonly validators: ValidatorFn | ValidatorFn[] | null,
     public readonly source: AbstractControl,
   ) {
     super();

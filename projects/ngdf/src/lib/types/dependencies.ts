@@ -110,6 +110,8 @@ export interface WithDependencies {
     dependencies: CrossControlDependency[],
   ): void;
   clearDependentControls(): void;
+  enableEventWatching(): void;
+  disableEventWatching(): void;
 }
 
 export interface WithEvents {
@@ -124,3 +126,5 @@ export interface WithEvents {
 export type NgdfControl<T extends AbstractControl> = T &
   WithDependencies &
   WithEvents;
+
+export type NgdfEventHandlerFn<T extends ControlEvent> = (event: T) => void;

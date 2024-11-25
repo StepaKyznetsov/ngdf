@@ -2,12 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  computed,
-  signal,
   viewChild,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgdfFormComponent, NgdfFormDirective, NgdfFormGroupConfig } from 'ngdf';
+import { NgdfFormComponent, NgdfFormGroupConfig } from 'ngdf';
 
 @Component({
   selector: 'app-root',
@@ -18,17 +16,11 @@ import { NgdfFormComponent, NgdfFormDirective, NgdfFormGroupConfig } from 'ngdf'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements AfterViewInit {
-  private readonly a = signal<string>('123');
-
-  private readonly form = viewChild(NgdfFormDirective);
+  private readonly formComponent = viewChild(NgdfFormComponent);
 
   ngAfterViewInit(): void {
-    console.log(this.form())
+    this.formComponent()?.getForm()?.enableEventWatching();
   }
-
-  readonly b = {
-    disabled: computed(() => this.a()),
-  };
 
   readonly config: NgdfFormGroupConfig = {
     type: 'group',
