@@ -5,7 +5,7 @@ import {
   NgdfFormGroupConfig,
   ValidatorKey,
   ValidatorKeyWithWrapperFn,
-} from '../types';
+} from '../types/config';
 
 /**
  * Whether the value is of type NgdfFormControlConfig

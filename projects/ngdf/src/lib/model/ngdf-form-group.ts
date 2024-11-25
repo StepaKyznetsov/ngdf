@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { NgdfAbstractControl, NgdfFormGroup } from '../types';
+import { NgdfAbstractControl, NgdfFormGroup } from '../types/controls';
 import { ngdfControl } from './ngdf-control';
 
 /**

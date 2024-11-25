@@ -9,15 +9,21 @@ import {
 } from '@angular/forms';
 import { merge, Observable, Subject } from 'rxjs';
 import {
-  CrossControlDependency,
+  HiddenChangeEvent,
+  ValidatorsChangeEvent,
+} from '../ngdf-control-events';
+import {
   NgdfAbstractControl,
   NgdfFormArray,
   NgdfFormControl,
   NgdfFormGroup,
+} from '../types/controls';
+import {
+  CrossControlDependency,
   WithDependencies,
   WithEvents,
-} from '../types';
-import { findControlInFormGroup } from '../utils';
+} from '../types/dependencies';
+import { findControlInFormGroup } from '../utils/find-control';
 
 type Constructor<T = any, U = any[]> = new (
   ...args: U extends any[]
@@ -27,38 +33,12 @@ type Constructor<T = any, U = any[]> = new (
       : never
 ) => T;
 
-/**
- * Event fired when the control's hidden changes.
- */
-export class HiddenChangeEvent extends ControlEvent<boolean> {
-  constructor(
-    public readonly hidden: boolean,
-    public readonly source: AbstractControl,
-  ) {
-    super();
-  }
-}
-
-/**
- * Event fired when the control's validators changes.
- */
-export class ValidatorsChangeEvent extends ControlEvent<
-  ValidatorFn | ValidatorFn[]
-> {
-  constructor(
-    public readonly validators: ValidatorFn | ValidatorFn[],
-    public readonly source: AbstractControl,
-  ) {
-    super();
-  }
-}
-
 export function ngdfControl<T = any>(
-  BaseControl: Constructor<FormControl<T>>,
+  baseControl: Constructor<FormControl<T>>,
 ): Constructor<NgdfFormControl<T>, typeof FormControl<T>>;
 
 export function ngdfControl<T extends NgdfAbstractControl = any>(
-  BaseControl: Constructor<FormArray<T>>,
+  baseControl: Constructor<FormArray<T>>,
 ): Constructor<NgdfFormArray<T>, typeof FormArray<T>>;
 
 export function ngdfControl<
@@ -66,15 +46,15 @@ export function ngdfControl<
     [K in keyof T]: NgdfAbstractControl;
   } = any,
 >(
-  BaseControl: Constructor<FormGroup<T>>,
+  baseControl: Constructor<FormGroup<T>>,
 ): Constructor<NgdfFormGroup<T>, typeof FormGroup<T>>;
 
 export function ngdfControl<T extends AbstractControl>(
-  BaseControl: Constructor<T>,
+  baseControl: Constructor<T>,
 ): Constructor<NgdfAbstractControl, T> {
   //@ts-expect-error abstract methods already implemented
   return class NgdfControl
-    extends BaseControl
+    extends baseControl
     implements WithDependencies, WithEvents
   {
     private readonly _ngdfEvents = new Subject<ControlEvent>();

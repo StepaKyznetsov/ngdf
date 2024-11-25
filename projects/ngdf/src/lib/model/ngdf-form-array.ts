@@ -1,5 +1,5 @@
 import { FormArray } from '@angular/forms';
-import { NgdfAbstractControl, NgdfFormArray } from '../types';
+import { NgdfAbstractControl, NgdfFormArray } from '../types/controls';
 import { ngdfControl } from './ngdf-control';
 
 /**

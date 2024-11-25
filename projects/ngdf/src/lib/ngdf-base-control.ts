@@ -1,5 +1,5 @@
 import { Directive, input, model } from '@angular/core';
-import { NgdfAbstractControlConfig, NgdfFormControlConfig } from './types';
+import { NgdfAbstractControlConfig, NgdfFormControlConfig } from './types/config';
 
 /**
  *

@@ -1,6 +1,13 @@
-import { InjectionToken, Provider } from '@angular/core';
+import {
+  EnvironmentProviders,
+  InjectionToken,
+  makeEnvironmentProviders,
+  Provider,
+} from '@angular/core';
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
-import { NgdfControlLoaderFn, NgdfControlType } from './types';
+import { NgdfControlType } from './types/config';
+import { NgdfControlLoaderFn } from './types/controls';
+import { typedEntries } from './utils/typed-entries';
 
 /**
  * Array of registered dynamic components
@@ -16,18 +23,20 @@ export const NGDF_DYNAMIC_CONTROLS = new InjectionToken<
  */
 export const provideNgdfDynamicControls = (
   controls: Partial<Record<NgdfControlType, NgdfControlLoaderFn>>,
-): Provider => {
+): EnvironmentProviders => {
   const controlMap = new Map<NgdfControlType, NgdfControlLoaderFn>();
-  Object.entries(controls).forEach(([type, control]) =>
-    controlMap.set(type as NgdfControlType, control),
+  typedEntries<NgdfControlType, NgdfControlLoaderFn>(controls).forEach(
+    ([type, control]) => controlMap.set(type, control),
   );
 
-  return {
-    provide: NGDF_DYNAMIC_CONTROLS,
-    useValue: controlMap,
-  };
+  return makeEnvironmentProviders([
+    {
+      provide: NGDF_DYNAMIC_CONTROLS,
+      useValue: controlMap,
+    },
+  ]);
 };
 
-export const ngdfViewProviders = [
+export const ngdfViewProviders: Provider[] = [
   { provide: ControlContainer, useExisting: FormGroupDirective },
 ];

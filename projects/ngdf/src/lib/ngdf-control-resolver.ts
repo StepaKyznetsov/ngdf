@@ -2,11 +2,8 @@ import { inject, Injectable, Type } from '@angular/core';
 import { from, Observable, of, tap } from 'rxjs';
 import { NgdfBaseControl } from './ngdf-base-control';
 import { NGDF_DYNAMIC_CONTROLS } from './providers';
-import { NgdfControlType } from './types';
+import { NgdfControlType } from './types/config';
 
-/**
- *
- */
 @Injectable({
   providedIn: 'root',
 })

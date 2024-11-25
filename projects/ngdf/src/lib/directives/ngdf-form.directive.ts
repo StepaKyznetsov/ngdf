@@ -1,7 +1,7 @@
 import { Directive, inject, Input } from '@angular/core';
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { NgdfFormBuilder } from '../ngdf-form-builder';
-import { NgdfFormGroupConfig } from '../types';
+import { NgdfFormGroupConfig } from '../types/config';
 
 /**
  *

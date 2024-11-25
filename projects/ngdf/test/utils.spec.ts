@@ -8,7 +8,7 @@ import {
   isFormControlConfig,
   isFormGroupConfig,
   isValidatorKeyWithWrapperFn,
-} from '../src/lib/utils';
+} from '../src/lib/utils/type-narrowing';
 
 describe('utils', () => {
   // describe('[findControlInFormGroupConfig]', () => {

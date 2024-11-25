@@ -9,19 +9,21 @@ import { ngdfFormArray } from './model/ngdf-form-array';
 import { ngdfFormControl } from './model/ngdf-form-control';
 import { ngdfFormGroup } from './model/ngdf-form-group';
 import {
-  NgdfAbstractControl,
   NgdfControlConfig,
-  NgdfFormArray,
   NgdfFormArrayConfig,
-  NgdfFormControl,
   NgdfFormControlConfig,
-  NgdfFormGroup,
   NgdfFormGroupConfig,
   NgdfValidators,
   NgdfValidatorValue,
   ValidatorKey,
   ValidatorWrapperFn,
-} from './types';
+} from './types/config';
+import {
+  NgdfAbstractControl,
+  NgdfFormArray,
+  NgdfFormControl,
+  NgdfFormGroup,
+} from './types/controls';
 import {
   isBoolean,
   isFormArrayConfig,
@@ -30,7 +32,8 @@ import {
   isObject,
   isRegExp,
   isValidatorKeyWithWrapperFn,
-} from './utils';
+} from './utils/type-narrowing';
+import { typedEntries } from './utils/typed-entries';
 
 /**
  * This is not a builder in the classical sense,
@@ -135,7 +138,7 @@ export class NgdfFormBuilder {
       return null;
     }
 
-    return (Object.entries(validators) as [ValidatorKey, NgdfValidatorValue][])
+    return typedEntries<ValidatorKey, NgdfValidatorValue>(validators)
       .map(([key, validatorBody]) => {
         const validatorFn = this.createValidatorFn(key, validatorBody);
         if (

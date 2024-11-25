@@ -1,26 +1,30 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  NgdfFormComponent,
-  NgdfFormDirective,
-  NgdfFormGroupConfig,
-} from 'ngdf';
+import { NgdfFormComponent, NgdfFormDirective, NgdfFormGroupConfig } from 'ngdf';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ReactiveFormsModule, NgdfFormDirective, NgdfFormComponent],
+  imports: [ReactiveFormsModule, NgdfFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   private readonly a = signal<string>('123');
+
+  private readonly form = viewChild(NgdfFormDirective);
+
+  ngAfterViewInit(): void {
+    console.log(this.form())
+  }
 
   readonly b = {
     disabled: computed(() => this.a()),
