@@ -57,7 +57,6 @@ export {
 export {
   NgdfControl,
   ValueConverterFn,
-  WithDependencies,
   WithEvents,
 } from './types/dependencies';
 

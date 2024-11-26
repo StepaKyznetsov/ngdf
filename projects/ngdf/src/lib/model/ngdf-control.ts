@@ -22,13 +22,8 @@ import {
   NgdfFormControl,
   NgdfFormGroup,
 } from '../types/controls';
-import {
-  CrossControlDependency,
-  WithDependencies,
-  WithEvents,
-} from '../types/dependencies';
+import { WithEvents } from '../types/dependencies';
 import { NgdfEventKey } from '../types/events';
-import { findControlInFormGroup } from '../utils/find-control';
 
 type Constructor<T = any, U = any[]> = new (
   ...args: U extends any[]
@@ -58,18 +53,10 @@ export function ngdfControl<T extends AbstractControl>(
   baseControl: Constructor<T>,
 ): Constructor<NgdfAbstractControl, T> {
   //@ts-expect-error abstract methods already implemented
-  return class NgdfControl
-    extends baseControl
-    implements WithDependencies, WithEvents
-  {
+  return class NgdfControl extends baseControl implements WithEvents {
     private _connections!: NgdfConnection[] | null;
 
     private readonly _ngdfEvents = new Subject<ControlEvent>();
-
-    private _dependentControls: Map<
-      CrossControlDependency,
-      AbstractControl
-    > | null = null;
 
     readonly ngdfEvents: Observable<ControlEvent> = merge(
       this.events,
@@ -145,30 +132,6 @@ export function ngdfControl<T extends AbstractControl>(
       this._ngdfEvents.next(
         new ValidatorsChangeEvent(validators, opts?.sourceControl ?? this),
       );
-    }
-
-    setDependentControls(
-      formGroup: FormGroup,
-      dependencies: CrossControlDependency[],
-    ): void {
-      (this._dependentControls ??= new Map()).clear();
-      dependencies.forEach((dependency) => {
-        const {
-          control: { key },
-        } = dependency;
-        const control = findControlInFormGroup(key, formGroup);
-        if (control) {
-          this._dependentControls!.set(dependency, control);
-        }
-      });
-    }
-
-    getDependentControls(): typeof this._dependentControls {
-      return this._dependentControls;
-    }
-
-    clearDependentControls(): void {
-      this._dependentControls = null;
     }
   };
 }

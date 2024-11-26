@@ -32,15 +32,15 @@ export class NgdfConnection {
       .subscribe();
   }
 
+  close() {
+    this._closeConnection.next();
+    this._closeConnection.complete();
+  }
+
   private _convert(): void {
     this._converters.reduce((_, converter) =>
       converter(this._currentControl, this._prop, this._dependentControls),
     );
-  }
-
-  close() {
-    this._closeConnection.next();
-    this._closeConnection.complete();
   }
 }
 

@@ -1,4 +1,4 @@
-import { AbstractControl, ControlEvent, FormGroup } from '@angular/forms';
+import { AbstractControl, ControlEvent } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { NgdfFormControlConfig, ValidatorKey } from './config';
 import { NgdfAbstractControl } from './controls';
@@ -104,16 +104,6 @@ export type ValueConverterFn = <T extends DependencyMode, U = unknown>(
       ? string
       : boolean;
 
-export interface WithDependencies {
-  setDependentControls(
-    formGroup: FormGroup,
-    dependencies: CrossControlDependency[],
-  ): void;
-  clearDependentControls(): void;
-  enableEventWatching(): void;
-  disableEventWatching(): void;
-}
-
 export interface WithEvents {
   ngdfEvents: Observable<ControlEvent>;
   hidden: boolean;
@@ -123,8 +113,6 @@ export interface WithEvents {
   ): void;
 }
 
-export type NgdfControl<T extends AbstractControl> = T &
-  WithDependencies &
-  WithEvents;
+export type NgdfControl<T extends AbstractControl> = T & WithEvents;
 
 export type NgdfEventHandlerFn<T extends ControlEvent> = (event: T) => void;
