@@ -5,15 +5,13 @@ import {
   FormArray,
   FormControl,
   FormGroup,
-  FormResetEvent,
-  FormSubmittedEvent,
-  PristineChangeEvent,
-  StatusChangeEvent,
-  TouchedChangeEvent,
   ValidatorFn,
-  ValueChangeEvent,
 } from '@angular/forms';
-import { merge, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
+import {
+  ngdfConnection,
+  NgdfConnection,
+} from '../dependencies/ngdf-connection';
 import {
   HiddenChangeEvent,
   ValidatorsChangeEvent,
@@ -26,10 +24,10 @@ import {
 } from '../types/controls';
 import {
   CrossControlDependency,
-  NgdfEventHandlerFn,
   WithDependencies,
   WithEvents,
 } from '../types/dependencies';
+import { NgdfEventKey } from '../types/events';
 import { findControlInFormGroup } from '../utils/find-control';
 
 type Constructor<T = any, U = any[]> = new (
@@ -64,8 +62,9 @@ export function ngdfControl<T extends AbstractControl>(
     extends baseControl
     implements WithDependencies, WithEvents
   {
+    private _connections!: NgdfConnection[] | null;
+
     private readonly _ngdfEvents = new Subject<ControlEvent>();
-    private readonly _stopEventWatching = new Subject<void>();
 
     private _dependentControls: Map<
       CrossControlDependency,
@@ -77,15 +76,25 @@ export function ngdfControl<T extends AbstractControl>(
       this._ngdfEvents.asObservable(),
     );
 
+    connection(
+      prop: NgdfEventKey,
+      dependentControls: NgdfAbstractControl[],
+      converters: ((...args: any[]) => any)[],
+    ): this {
+      this._connections ??= [];
+      this._connections.push(
+        ngdfConnection(this, prop, dependentControls, converters),
+      );
+
+      return this;
+    }
+
     enableEventWatching(): void {
-      this.ngdfEvents
-        .pipe(tap(onEvent), takeUntil(this._stopEventWatching))
-        .subscribe();
+      this._connections?.forEach((connection) => connection.open());
     }
 
     disableEventWatching(): void {
-      this._stopEventWatching.next();
-      this._stopEventWatching.complete();
+      this._connections?.forEach((connection) => connection.close());
     }
 
     get hidden(): boolean {
@@ -162,65 +171,4 @@ export function ngdfControl<T extends AbstractControl>(
       this._dependentControls = null;
     }
   };
-}
-
-const valueChangeEventHandlerFn: NgdfEventHandlerFn<ValueChangeEvent<any>> = (
-  event,
-) => {
-  console.log(event);
-};
-const statusChangeEventHandlerFn: NgdfEventHandlerFn<StatusChangeEvent> = (
-  event,
-) => {
-  console.log(event);
-};
-const touchedChangeEventHandlerFn: NgdfEventHandlerFn<TouchedChangeEvent> = (
-  event,
-) => {
-  console.log(event);
-};
-const hiddenChangeEventHandlerFn: NgdfEventHandlerFn<HiddenChangeEvent> = (
-  event,
-) => {
-  console.log(event);
-};
-const validatorsChangeEventHandlerFn: NgdfEventHandlerFn<
-  ValidatorsChangeEvent
-> = (event) => {
-  console.log(event);
-};
-const formResetEventHandlerFn: NgdfEventHandlerFn<FormResetEvent> = (event) => {
-  console.log(event);
-};
-const formSubmittedEventHandlerFn: NgdfEventHandlerFn<FormSubmittedEvent> = (
-  event,
-) => {
-  console.log(event);
-};
-const pristineChangeEventHandlerFn: NgdfEventHandlerFn<PristineChangeEvent> = (
-  event,
-) => {
-  console.log(event);
-};
-
-function onEvent(event: ControlEvent): void {
-  if (event instanceof ValueChangeEvent) {
-    valueChangeEventHandlerFn(event);
-  } else if (event instanceof StatusChangeEvent) {
-    statusChangeEventHandlerFn(event);
-  } else if (event instanceof TouchedChangeEvent) {
-    touchedChangeEventHandlerFn(event);
-  } else if (event instanceof HiddenChangeEvent) {
-    hiddenChangeEventHandlerFn(event);
-  } else if (event instanceof ValidatorsChangeEvent) {
-    validatorsChangeEventHandlerFn(event);
-  } else if (event instanceof FormResetEvent) {
-    formResetEventHandlerFn(event);
-  } else if (event instanceof FormSubmittedEvent) {
-    formSubmittedEventHandlerFn(event);
-  } else if (event instanceof PristineChangeEvent) {
-    pristineChangeEventHandlerFn(event);
-  }
-
-  return;
 }

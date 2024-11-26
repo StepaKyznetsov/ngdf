@@ -1,4 +1,4 @@
-import { Directive, input, model } from '@angular/core';
+import { Directive, model } from '@angular/core';
 import {
   NgdfAbstractControlConfig,
   NgdfFormControlConfig,
@@ -23,6 +23,5 @@ import {
 export class NgdfBaseControl<
   T extends NgdfAbstractControlConfig = NgdfFormControlConfig<string>,
 > {
-  protected readonly controlKey = input.required<string>();
-  protected readonly controlConfig = model.required<T>();
+  protected readonly control = model.required<T>();
 }

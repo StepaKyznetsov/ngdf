@@ -19,13 +19,15 @@ export class AppComponent implements AfterViewInit {
   private readonly formComponent = viewChild(NgdfFormComponent);
 
   ngAfterViewInit(): void {
-    this.formComponent()?.getForm()?.enableEventWatching();
+    // this.formComponent()?.getForm()?.enableEventWatching();
   }
 
   readonly config: NgdfFormGroupConfig = {
+    key: 'group',
     type: 'group',
-    controls: {
-      email: {
+    controls: [
+      {
+        key: 'qwe',
         value: '2',
         label: 'test',
         type: 'text',
@@ -33,15 +35,16 @@ export class AppComponent implements AfterViewInit {
           required: true,
         },
       },
-      phone: {
+      {
+        key: '456',
         value: '896444434',
         type: 'text',
-        // validators: [
-        //   {
-        //     key: 'required',
-        //   },
-        // ],
       },
-    },
+      {
+        key: 'tsre',
+        value: '896444434',
+        type: 'text',
+      },
+    ],
   };
 }

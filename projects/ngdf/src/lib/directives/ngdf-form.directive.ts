@@ -4,25 +4,20 @@ import {
   forwardRef,
   inject,
   Input,
-  Type,
 } from '@angular/core';
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { NgdfFormBuilder } from '../ngdf-form-builder';
 import { NgdfFormGroupConfig } from '../types/config';
 import { NgdfFormGroup } from '../types/controls';
 
-const useExisting: Type<NgdfFormDirective> = forwardRef(
-  () => NgdfFormDirective,
-);
-
-const ngdfFormDirectiveProviders: ExistingProvider[] = [
+const ngdfFormDirectiveBinding: ExistingProvider[] = [
   {
     provide: FormGroupDirective,
-    useExisting,
+    useExisting: forwardRef(() => NgdfFormDirective),
   },
   {
     provide: ControlContainer,
-    useExisting,
+    useExisting: forwardRef(() => NgdfFormDirective),
   },
 ];
 
@@ -33,7 +28,7 @@ const ngdfFormDirectiveProviders: ExistingProvider[] = [
   selector:
     'form[ngdfForm]:not([formGroup]):not([ngForm]):not(ng-form):not([ngNoForm])',
   standalone: true,
-  providers: [ngdfFormDirectiveProviders],
+  providers: [ngdfFormDirectiveBinding],
   exportAs: 'ngdfForm',
 })
 export class NgdfFormDirective extends FormGroupDirective {

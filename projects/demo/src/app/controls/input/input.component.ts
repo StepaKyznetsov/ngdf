@@ -1,16 +1,13 @@
-import { JsonPipe } from '@angular/common';
-import { Component, viewChild } from '@angular/core';
-import { FormControlName, ReactiveFormsModule } from '@angular/forms';
-import { NgdfBaseControl, ngdfViewProviders } from 'ngdf';
+import { Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgdfBaseControl, ngdfControlBinding } from 'ngdf';
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [ReactiveFormsModule, JsonPipe],
+  imports: [ReactiveFormsModule],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
-  viewProviders: [ngdfViewProviders],
+  viewProviders: [ngdfControlBinding],
 })
-export class InputComponent extends NgdfBaseControl {
-  protected readonly controlRef = viewChild(FormControlName);
-}
+export class InputComponent extends NgdfBaseControl {}

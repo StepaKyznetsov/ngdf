@@ -76,6 +76,7 @@ export type NgdfValidators = {
  * Base type for all dynamic controls / arrays / groups
  */
 export interface NgdfAbstractControlConfig {
+  key: string;
   hidden?: boolean;
   disabled?: boolean;
   label?: string;
@@ -112,7 +113,7 @@ type CompositeControlType<T> = T extends unknown[] ? 'array' : 'group';
  */
 export interface CompositeControl<T extends object>
   extends NgdfAbstractControlConfig {
-  controls: T;
+  controls: T[];
   type: CompositeControlType<T>;
 }
 
@@ -122,16 +123,14 @@ export interface CompositeControl<T extends object>
  * Based on {@link CompositeControl}
  */
 export type NgdfFormArrayConfig<T extends NgdfControlConfig = any> =
-  CompositeControl<T[]>;
+  CompositeControl<T>;
 
 /**
  * Default form config
  *
  * Based on {@link CompositeControl}
  */
-export type NgdfFormGroupConfig = CompositeControl<{
-  [key: string]: NgdfControlConfig;
-}>;
+export type NgdfFormGroupConfig = CompositeControl<NgdfControlConfig>;
 
 export type NgdfControlConfig =
   | NgdfFormGroupConfig

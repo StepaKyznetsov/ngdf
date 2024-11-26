@@ -84,4 +84,4 @@ export { NgdfControlResolver } from './ngdf-control-resolver';
 
 export { NgdfFormBuilder } from './ngdf-form-builder';
 
-export { ngdfViewProviders, provideNgdfDynamicControls } from './providers';
+export { ngdfControlBinding, provideNgdfDynamicControls } from './providers';

@@ -37,6 +37,6 @@ export const provideNgdfDynamicControls = (
   ]);
 };
 
-export const ngdfViewProviders: Provider[] = [
+export const ngdfControlBinding: Provider[] = [
   { provide: ControlContainer, useExisting: FormGroupDirective },
 ];

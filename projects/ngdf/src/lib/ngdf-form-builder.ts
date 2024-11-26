@@ -60,13 +60,13 @@ export class NgdfFormBuilder {
     validators ??= this.resolveValidators(config.validators);
 
     const formGroup = ngdfFormGroup<T>({} as T, validators);
-    for (const [name, control] of Object.entries(config.controls)) {
+    for (const control of config.controls) {
       const nestedControlvalidators = this.resolveValidators(
         control.validators,
       );
       formGroup.addControl(
-        name,
-        this.buildControl(control, nestedControlvalidators)!,
+        control.key,
+        this.buildControl(control, nestedControlvalidators),
       );
     }
 
