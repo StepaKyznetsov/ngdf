@@ -2,6 +2,7 @@ import { AbstractControl, ControlEvent } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { NgdfFormControlConfig, ValidatorKey } from './config';
 import { NgdfAbstractControl } from './controls';
+import { NgdfEventKey } from './events';
 
 export type CopyDependencyMode = 'copy';
 
@@ -104,7 +105,14 @@ export type ValueConverterFn = <T extends DependencyMode, U = unknown>(
       ? string
       : boolean;
 
-export interface WithEvents {
+export interface WithNgdf {
+  connection(
+    prop: NgdfEventKey,
+    dependentControls: NgdfAbstractControl[],
+    converters: NgdfConverterFn[],
+  ): this;
+  openConnections(): void;
+  closeConnections(): void;
   ngdfEvents: Observable<ControlEvent>;
   hidden: boolean;
   setHidden(
@@ -113,6 +121,11 @@ export interface WithEvents {
   ): void;
 }
 
-export type NgdfControl<T extends AbstractControl> = T & WithEvents;
+export type NgdfControl<T extends AbstractControl> = T & WithNgdf;
 
 export type NgdfEventHandlerFn<T extends ControlEvent> = (event: T) => void;
+
+export type NgdfConverterFn<
+  T extends ControlEvent = ControlEvent,
+  U extends any[] = any[],
+> = (event: T, dependentControls: NgdfAbstractControl[], ...args: U) => void;

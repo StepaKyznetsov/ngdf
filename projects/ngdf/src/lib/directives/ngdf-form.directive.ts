@@ -10,7 +10,7 @@ import { NgdfFormBuilder } from '../ngdf-form-builder';
 import { NgdfFormGroupConfig } from '../types/config';
 import { NgdfFormGroup } from '../types/controls';
 
-const ngdfFormDirectiveBinding: ExistingProvider[] = [
+const ngdfFormDirectiveProviders: ExistingProvider[] = [
   {
     provide: FormGroupDirective,
     useExisting: forwardRef(() => NgdfFormDirective),
@@ -28,7 +28,7 @@ const ngdfFormDirectiveBinding: ExistingProvider[] = [
   selector:
     'form[ngdfForm]:not([formGroup]):not([ngForm]):not(ng-form):not([ngNoForm])',
   standalone: true,
-  providers: [ngdfFormDirectiveBinding],
+  providers: [ngdfFormDirectiveProviders],
   exportAs: 'ngdfForm',
 })
 export class NgdfFormDirective extends FormGroupDirective {

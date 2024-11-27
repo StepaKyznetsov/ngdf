@@ -8,10 +8,7 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { merge, Observable, Subject } from 'rxjs';
-import {
-  ngdfConnection,
-  NgdfConnection,
-} from '../dependencies/ngdf-connection';
+import { NgdfConnection } from '../dependencies/ngdf-connection';
 import {
   HiddenChangeEvent,
   ValidatorsChangeEvent,
@@ -22,7 +19,7 @@ import {
   NgdfFormControl,
   NgdfFormGroup,
 } from '../types/controls';
-import { WithEvents } from '../types/dependencies';
+import { NgdfConverterFn, WithNgdf } from '../types/dependencies';
 import { NgdfEventKey } from '../types/events';
 
 type Constructor<T = any, U = any[]> = new (
@@ -53,8 +50,8 @@ export function ngdfControl<T extends AbstractControl>(
   baseControl: Constructor<T>,
 ): Constructor<NgdfAbstractControl, T> {
   //@ts-expect-error abstract methods already implemented
-  return class NgdfControl extends baseControl implements WithEvents {
-    private _connections!: NgdfConnection[] | null;
+  return class NgdfControl extends baseControl implements WithNgdf {
+    private _connections: NgdfConnection[] | null = null;
 
     private readonly _ngdfEvents = new Subject<ControlEvent>();
 
@@ -66,21 +63,21 @@ export function ngdfControl<T extends AbstractControl>(
     connection(
       prop: NgdfEventKey,
       dependentControls: NgdfAbstractControl[],
-      converters: ((...args: any[]) => any)[],
+      converters: NgdfConverterFn[],
     ): this {
       this._connections ??= [];
       this._connections.push(
-        ngdfConnection(this, prop, dependentControls, converters),
+        new NgdfConnection(this, prop, dependentControls, converters),
       );
 
       return this;
     }
 
-    enableEventWatching(): void {
+    openConnections(): void {
       this._connections?.forEach((connection) => connection.open());
     }
 
-    disableEventWatching(): void {
+    closeConnections(): void {
       this._connections?.forEach((connection) => connection.close());
     }
 

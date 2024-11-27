@@ -1,12 +1,14 @@
+import { ControlEvent } from '@angular/forms';
 import { filter, Subject, takeUntil, tap } from 'rxjs';
 import { NgdfAbstractControl } from '../types/controls';
+import { NgdfConverterFn } from '../types/dependencies';
 import { NgdfEventKey, ngdfEventMap } from '../types/events';
 
 export class NgdfConnection {
   private _currentControl!: NgdfAbstractControl;
   private _prop!: NgdfEventKey;
   private _dependentControls!: NgdfAbstractControl[];
-  private _converters!: ((...args: any[]) => any)[];
+  private _converters!: NgdfConverterFn[];
 
   private readonly _closeConnection = new Subject<void>();
 
@@ -14,7 +16,7 @@ export class NgdfConnection {
     currentControl: NgdfAbstractControl,
     prop: NgdfEventKey,
     dependentControls: NgdfAbstractControl[],
-    converters: ((...args: any[]) => any)[],
+    converters: NgdfConverterFn[],
   ) {
     this._currentControl = currentControl;
     this._prop = prop;
@@ -26,26 +28,26 @@ export class NgdfConnection {
     this._currentControl.ngdfEvents
       .pipe(
         filter((event) => event instanceof ngdfEventMap[this._prop]),
-        tap(() => this._convert()),
+        tap((event) => this._convert(event)),
         takeUntil(this._closeConnection),
       )
       .subscribe();
   }
 
-  close() {
+  close(): void {
     this._closeConnection.next();
     this._closeConnection.complete();
   }
 
-  private _convert(): void {
-    this._converters.reduce((_, converter) =>
-      converter(this._currentControl, this._prop, this._dependentControls),
+  private _convert(event: ControlEvent): void {
+    this._converters.forEach((converter) =>
+      converter(event, this._dependentControls),
     );
   }
 }
 
-export function ngdfConnection(
-  ...args: ConstructorParameters<typeof NgdfConnection>
-): NgdfConnection {
-  return new NgdfConnection(...args);
-}
+// export function ngdfConnection(
+//   ...args: ConstructorParameters<typeof NgdfConnection>
+// ): NgdfConnection {
+//   return new NgdfConnection(...args);
+// }

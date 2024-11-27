@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgdfBaseControl, ngdfControlBinding } from 'ngdf';
+import { NgdfBaseControl, ngdfControlProviders } from 'ngdf';
 
 @Component({
   selector: 'app-input',
@@ -8,6 +8,6 @@ import { NgdfBaseControl, ngdfControlBinding } from 'ngdf';
   imports: [ReactiveFormsModule],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
-  viewProviders: [ngdfControlBinding],
+  viewProviders: [ngdfControlProviders],
 })
 export class InputComponent extends NgdfBaseControl {}

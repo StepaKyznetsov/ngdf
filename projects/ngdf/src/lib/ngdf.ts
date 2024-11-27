@@ -54,11 +54,7 @@ export {
   NgdfFormControl,
   NgdfFormGroup,
 } from './types/controls';
-export {
-  NgdfControl,
-  ValueConverterFn,
-  WithEvents,
-} from './types/dependencies';
+export { NgdfControl, ValueConverterFn } from './types/dependencies';
 
 export { findControlInFormGroup } from './utils/find-control';
 export {
@@ -83,4 +79,4 @@ export { NgdfControlResolver } from './ngdf-control-resolver';
 
 export { NgdfFormBuilder } from './ngdf-form-builder';
 
-export { ngdfControlBinding, provideNgdfDynamicControls } from './providers';
+export { ngdfControlProviders, provideNgdfDynamicControls } from './providers';

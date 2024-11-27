@@ -19,7 +19,10 @@ export class AppComponent implements AfterViewInit {
   private readonly formComponent = viewChild(NgdfFormComponent);
 
   ngAfterViewInit(): void {
-    // this.formComponent()?.getForm()?.enableEventWatching();
+    this.formComponent()
+      ?.getForm()
+      ?.connection('value', [], [])
+      .connection('value', [], []);
   }
 
   readonly config: NgdfFormGroupConfig = {
