@@ -1,7 +1,5 @@
 export {
-  boolean,
   booleanInvert,
-  copy,
   dirty,
   equal,
   invalid,
@@ -19,7 +17,7 @@ export {
   touched,
   untouched,
   valueFrom,
-  valueFromInvert,
+  valueFromInvert
 } from './dependencies/ngdf-value-converters';
 
 export { NgdfFormDirective } from './directives/ngdf-form.directive';
@@ -45,14 +43,14 @@ export {
   ValidatorArgumentTypeByKey,
   ValidatorKey,
   ValidatorKeyWithWrapperFn,
-  ValidatorWrapperFn,
+  ValidatorWrapperFn
 } from './types/config';
 export {
   NgdfAbstractControl,
   NgdfControlLoaderFn,
   NgdfFormArray,
   NgdfFormControl,
-  NgdfFormGroup,
+  NgdfFormGroup
 } from './types/controls';
 export { NgdfControl, ValueConverterFn } from './types/dependencies';
 
@@ -65,14 +63,14 @@ export {
   isNonNullable,
   isObject,
   isRegExp,
-  isValidatorKeyWithWrapperFn,
+  isValidatorKeyWithWrapperFn
 } from './utils/type-narrowing';
 
 export { NgdfBaseControl } from './ngdf-base-control';
 
 export {
   HiddenChangeEvent,
-  ValidatorsChangeEvent,
+  ValidatorsChangeEvent
 } from './ngdf-control-events';
 
 export { NgdfControlResolver } from './ngdf-control-resolver';

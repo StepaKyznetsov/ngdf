@@ -4,7 +4,11 @@ import {
   makeEnvironmentProviders,
   Provider,
 } from '@angular/core';
-import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import {
+  ControlContainer,
+  ControlEvent,
+  FormGroupDirective,
+} from '@angular/forms';
 import { NgdfControlType } from './types/config';
 import { NgdfControlLoaderFn } from './types/controls';
 import { typedEntries } from './utils/typed-entries';
@@ -15,6 +19,10 @@ import { typedEntries } from './utils/typed-entries';
 export const NGDF_DYNAMIC_CONTROLS = new InjectionToken<
   ReadonlyMap<NgdfControlType, NgdfControlLoaderFn>
 >('Array of registered components for control types');
+
+export const NGDF_CONTROL_EVENT = new InjectionToken<ControlEvent>(
+  'Custom event',
+);
 
 /**
  * Environment provider for registering dynamic components

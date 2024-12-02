@@ -3,16 +3,17 @@ import { AbstractControl } from '@angular/forms';
 /**
  * Returning same value
  */
-export const copy = <T>(value: T): T => {
-  return value;
-};
+// export const copy: NgdfConverterFn = (event, dependentControls) => {
+//   return value;
+// };
 
 /**
  * Value booleanization
  */
-export const boolean = <T>(value: T): boolean => {
-  return !!value;
-};
+// export const boolean: NgdfConverterFn = (event, dependentControls): void => {
+  
+//   !!value;
+// };
 
 /**
  * Сonverting the value to a boolean value and then changing the value to the opposite

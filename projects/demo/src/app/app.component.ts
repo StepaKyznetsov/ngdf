@@ -21,8 +21,8 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.formComponent()
       ?.getForm()
-      ?.connection('value', [], [])
-      .connection('value', [], []);
+      ?.connection('hidden', [], [])
+      .connection('formReset', [], []);
   }
 
   readonly config: NgdfFormGroupConfig = {

@@ -73,10 +73,18 @@ export function ngdfControl<T extends AbstractControl>(
       return this;
     }
 
+    /**
+     * Connections are open by default after creating instance
+     * 
+     * You can reopen them after {@link closeConnections} method
+     */
     openConnections(): void {
       this._connections?.forEach((connection) => connection.open());
     }
 
+    /**
+     * Sometimes need to close connections for some reason 
+     */
     closeConnections(): void {
       this._connections?.forEach((connection) => connection.close());
     }

@@ -10,7 +10,11 @@ export class NgdfConnection {
   private _dependentControls!: NgdfAbstractControl[];
   private _converters!: NgdfConverterFn[];
 
-  private readonly _closeConnection = new Subject<void>();
+  private _closeConnection = new Subject<void>();
+
+  get opened(): boolean {
+    return !this._closeConnection.closed;
+  }
 
   constructor(
     currentControl: NgdfAbstractControl,
@@ -22,9 +26,13 @@ export class NgdfConnection {
     this._prop = prop;
     this._dependentControls = dependentControls;
     this._converters = converters;
+    this.open();
   }
 
   open(): void {
+    if (this._closeConnection.closed) {
+      this._closeConnection = new Subject<void>();
+    }
     this._currentControl.ngdfEvents
       .pipe(
         filter((event) => event instanceof ngdfEventMap[this._prop]),
@@ -41,13 +49,7 @@ export class NgdfConnection {
 
   private _convert(event: ControlEvent): void {
     this._converters.forEach((converter) =>
-      converter(event, this._dependentControls),
+      converter(event, this._dependentControls, this._prop),
     );
   }
 }
-
-// export function ngdfConnection(
-//   ...args: ConstructorParameters<typeof NgdfConnection>
-// ): NgdfConnection {
-//   return new NgdfConnection(...args);
-// }

@@ -128,4 +128,9 @@ export type NgdfEventHandlerFn<T extends ControlEvent> = (event: T) => void;
 export type NgdfConverterFn<
   T extends ControlEvent = ControlEvent,
   U extends any[] = any[],
-> = (event: T, dependentControls: NgdfAbstractControl[], ...args: U) => void;
+> = (
+  event: T,
+  dependentControls: NgdfAbstractControl[],
+  prop: NgdfEventKey,
+  ...args: U
+) => void;
