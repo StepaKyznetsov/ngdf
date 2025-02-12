@@ -1,9 +1,10 @@
 import { ValidatorFn, Validators } from '@angular/forms';
+import { CrossControlDependency } from './dependencies';
 
 type NgdfCompositeType = 'group' | 'array';
 
 /**
- * A basic set that will be expanded over time
+ * Basic set of control types
  */
 export type NgdfControlType =
   | 'text'
@@ -35,7 +36,7 @@ export type ValidatorKey =
   | 'nullValidator';
 
 /**
- * Validator keys ...
+ * Validator keys that need arguments (e.g. min and max validators require a number value)
  */
 export type ValidatorKeyWithWrapperFn = Exclude<
   ValidatorKey,
@@ -44,6 +45,8 @@ export type ValidatorKeyWithWrapperFn = Exclude<
 
 /**
  * Argument types for Validators keys from {@link ValidatorKey}
+ *
+ * If the validator does not require an argument, its value will be a boolean
  */
 export type ValidatorArgumentTypeByKey<T extends ValidatorKey> =
   T extends ValidatorKeyWithWrapperFn
@@ -73,13 +76,14 @@ export type NgdfValidators = {
  * Base type for all dynamic controls / arrays / groups
  */
 export interface NgdfAbstractControlConfig {
-  required?: boolean;
+  key: string;
   hidden?: boolean;
   disabled?: boolean;
   label?: string;
   validators?: NgdfValidators;
   // asyncValidators?: NgdfAsyncValidators;
   type: NgdfControlType;
+  dependentControls?: CrossControlDependency[];
 }
 
 /**
@@ -109,7 +113,7 @@ type CompositeControlType<T> = T extends unknown[] ? 'array' : 'group';
  */
 export interface CompositeControl<T extends object>
   extends NgdfAbstractControlConfig {
-  controls: T;
+  controls: T[];
   type: CompositeControlType<T>;
 }
 
@@ -118,18 +122,17 @@ export interface CompositeControl<T extends object>
  *
  * Based on {@link CompositeControl}
  */
-export type NgdfFormArrayConfig = CompositeControl<NgdfFormControlConfig[]>;
+export type NgdfFormArrayConfig<T extends NgdfControlConfig = any> =
+  CompositeControl<T>;
 
 /**
  * Default form config
  *
  * Based on {@link CompositeControl}
  */
-export type NgdfFormGroupConfig = CompositeControl<{
-  [key: string]: NgdfControlConfig;
-}>;
+export type NgdfFormGroupConfig = CompositeControl<NgdfControlConfig>;
 
 export type NgdfControlConfig =
-  | NgdfFormControlConfig
+  | NgdfFormGroupConfig
   | NgdfFormArrayConfig
-  | NgdfFormGroupConfig;
+  | NgdfFormControlConfig;

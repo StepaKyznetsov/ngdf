@@ -1,34 +1,13 @@
-import { JsonPipe } from '@angular/common';
-import { Component, viewChild } from '@angular/core';
-import {
-  ControlContainer,
-  FormControlName,
-  FormGroupDirective,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { NgdfBaseControl } from 'ngdf';
+import { Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgdfBaseControl, ngdfControlProviders } from 'ngdf';
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [ReactiveFormsModule, JsonPipe],
+  imports: [ReactiveFormsModule],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
-  viewProviders: [
-    { provide: ControlContainer, useExisting: FormGroupDirective },
-  ],
+  viewProviders: [ngdfControlProviders],
 })
-export class InputComponent extends NgdfBaseControl {
-  protected readonly controlRef = viewChild(FormControlName);
-
-  click() {
-    this.controlConfig.update((prev) => ({
-      ...prev,
-      label: '',
-      // validators: [...(prev.validators || []), { key: 'required' }],
-    }));
-    this.controlRef()?.control.removeValidators(Validators.required);
-    this.controlRef()?.control.updateValueAndValidity();
-  }
-}
+export class InputComponent extends NgdfBaseControl {}

@@ -8,12 +8,10 @@
     "watch": "ng build ngdf --watch --configuration development",
     "test": "ng test ngdf",
     "test:coverage": "ng test ngdf --no-watch --code-coverage",
-    "serve:ssr:test": "node dist/test/server/server.mjs",
     "lint": "npx eslint --debug projects",
     "lint:fix": "npx eslint --debug projects/ngdf --fix",
     "prepare": "husky",
-    "prettier": "npx prettier . --write",
-    "serve:ssr:demo": "node dist/demo/server/server.mjs"
+    "prettier": "npx prettier . --write"
   },
   "private": true,
   "dependencies": {

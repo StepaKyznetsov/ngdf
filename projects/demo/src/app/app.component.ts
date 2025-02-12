@@ -1,35 +1,36 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  computed,
-  signal,
+  viewChild,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  NgdfFormComponent,
-  NgdfFormDirective,
-  NgdfFormGroupConfig,
-} from 'ngdf';
+import { NgdfFormComponent, NgdfFormGroupConfig } from 'ngdf';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ReactiveFormsModule, NgdfFormDirective, NgdfFormComponent],
+  imports: [ReactiveFormsModule, NgdfFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  private readonly a = signal<string>('123');
+export class AppComponent implements AfterViewInit {
+  private readonly formComponent = viewChild(NgdfFormComponent);
 
-  readonly b = {
-    disabled: computed(() => this.a()),
-  };
+  ngAfterViewInit(): void {
+    this.formComponent()
+      ?.getForm()
+      ?.connection('hidden', [], [])
+      .connection('formReset', [], []);
+  }
 
   readonly config: NgdfFormGroupConfig = {
+    key: 'group',
     type: 'group',
-    controls: {
-      email: {
+    controls: [
+      {
+        key: 'qwe',
         value: '2',
         label: 'test',
         type: 'text',
@@ -37,15 +38,16 @@ export class AppComponent {
           required: true,
         },
       },
-      phone: {
+      {
+        key: '456',
         value: '896444434',
         type: 'text',
-        // validators: [
-        //   {
-        //     key: 'required',
-        //   },
-        // ],
       },
-    },
+      {
+        key: 'tsre',
+        value: '896444434',
+        type: 'text',
+      },
+    ],
   };
 }
